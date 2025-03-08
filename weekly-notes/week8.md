@@ -7,7 +7,7 @@ Basic Summary (Mo) | Multiple friends using web application will find closest st
 
 - Using React library for Frontend
 - MaterialUI framework -> Streamlined styles
-- <[Adrian's Wireframe](https://excalidraw.com/#json=rWHm8DqPR_pFkWYw2cv5E,CmeiDr72m9k8FTxkgwOshw)>
+- <[Adrian's Wireframe](https://excalidraw.com/#json=Js3d3bq6b_CHewkD6FfHe,uw3s7M5aRdA1P_RIZneJCA)>
 
 Backend Simple Backlog:
 Use simple map data to find closest location?
