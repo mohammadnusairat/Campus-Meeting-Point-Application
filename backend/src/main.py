@@ -1,7 +1,7 @@
 from graph import Graph
 from dijkstra import dijkstra
 from fermat import geodesic_fermat_point
-from osm_parser import load_open_street_map
+from osm_parser import load_open_street_map, ReadMapNodes, ReadFootways
 from geopy.distance import geodesic
 
 def find_nearest_node(graph, lat, lon, nodes):
@@ -70,15 +70,27 @@ def main():
     if xml_root is None:
         return
     
-    Nodes = {}  # {id: (lat, lon)}
+    Nodes = {}
     Footways = []
-    Buildings = []
+
+    ReadMapNodes(xml_root, Nodes)
+    ReadFootways(xml_root, Nodes, Footways)
 
     G = Graph()
-    for node_id, coords in Nodes.items():
+    for node_id in Nodes:
         G.add_vertex(node_id)
 
-    # ERROR: NEED TO LOAD PEOPLE'S LOCATIONS PROPERLY. MISSING IMPLEMENTATION FOR ABBREVIATIONS OF LOCATIONS AND USER'S LOCATION INPUT.
+    for footway in Footways:
+        for i in range(len(footway) - 1):
+            from_node = footway[i]
+            to_node = footway[i + 1]
+            if from_node in Nodes and to_node in Nodes:
+                from_coords = Nodes[from_node]
+                to_coords = Nodes[to_node]
+                weight = geodesic(from_coords, to_coords).meters
+                G.add_edge(from_node, to_node, weight)
+                G.add_edge(to_node, from_node, weight)
+
 
     people_locations = [
         (41.8708, -87.6505),

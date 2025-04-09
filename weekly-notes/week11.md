@@ -17,7 +17,7 @@ Understanding this we decided to take a different approach, and decided to think
 ## Meeting Notes:
 
 During this meeting, we discussed use cases for the advanced data structures that we were familiar with. Ivan mentioned tries due it being his favortite ADT thus far. Because tries are known for fast lookups, we thought it would be interesting to include a search bar for buildings in the OSM package.
-<Include disjoint set use case here>
+We will use disjoint set union to compute connected components of the graph. This is used to track connected components in the graph efficiently. When building the graph, nodes are joined into sets as edges are added. This allows O(1) time checks to determine whether any two nodes are in the same connected component.
 Now that we have our two data structures, we thought it would be interesting to have a functional UIC map that provides the user with building information (such as includes, bathroom, study rooms, recreational settings, food, etc) and directions to a building from the building they are currently at.
 
 ## Action Items (Work In Progress):

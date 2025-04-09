@@ -2,8 +2,12 @@ from flask import Flask, request, jsonify
 from graph import Graph
 from dijkstra import dijkstra
 from fermat import geodesic_fermat_point
-from osm_parser import load_open_street_map
+from osm_parser import load_open_street_map, ReadMapNodes, ReadFootways, load_buildings, get_building_coordinates
 from geopy.distance import geodesic
+import os
+from scipy.spatial import KDTree
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 app = Flask(__name__)
 
@@ -13,24 +17,156 @@ Nodes = {}  # {id: (lat, lon)}
 
 # Load OSM data
 def initialize_data():
-    global Nodes, G
+    global Nodes, G, node_components
     print("Loading OpenStreetMap data...")
-    
-    filename = "../data/uic-2024.osm"
+
+    filename = os.path.join(BASE_DIR, "data", "uic-2024.osm")
     xml_root = load_open_street_map(filename)
 
     if xml_root is None:
         raise Exception("Error loading OSM data")
-    
-    # Example: Nodes should be populated by parsing OSM data
-    # ReadMapNodes(xml_root, Nodes)
-    # ReadFootways(xml_root, Nodes, Footways)
-    # ReadUniversityBuildings(xml_root, Nodes, Buildings)
 
-    for node_id, coords in Nodes.items():
+    Footways = []
+    ReadMapNodes(xml_root, Nodes)
+    ReadFootways(xml_root, Nodes, Footways)
+
+    # Initialize graph
+    for node_id in Nodes:
         G.add_vertex(node_id)
 
+    # Add edges between consecutive footway nodes
+    for footway in Footways:
+        for i in range(len(footway) - 1):
+            from_node = footway[i]
+            to_node = footway[i + 1]
+            if from_node in Nodes and to_node in Nodes:
+                from_coords = Nodes[from_node]
+                to_coords = Nodes[to_node]
+                weight = geodesic(from_coords, to_coords).meters
+                G.add_edge(from_node, to_node, weight)
+                G.add_edge(to_node, from_node, weight)  # bidirectional
+
+    # Compute connected components
+    def compute_components(graph):
+        visited = set()
+        components = {}
+        component_id = 0
+
+        for node in graph.get_vertices():
+            if node in visited:
+                continue
+            queue = [node]
+            while queue:
+                current = queue.pop()
+                if current in visited:
+                    continue
+                visited.add(current)
+                components[current] = component_id
+                for neighbor in graph.neighbors(current):
+                    if neighbor not in visited:
+                        queue.append(neighbor)
+            component_id += 1
+
+        return components
+
+    node_components = compute_components(G)
+
+    # Find largest component
+    from collections import Counter
+    component_counts = Counter(node_components.values())
+    main_component_id = component_counts.most_common(1)[0][0]
+
+    # Sample some main component nodes for faster lookups
+    import random
+    main_nodes = [n for n, c in node_components.items() if c == main_component_id]
+    sampled_main = random.sample(main_nodes, min(150, len(main_nodes)))
+
+    # Create KD-Tree for main component
+    main_nodes = [n for n, c in node_components.items() if c == main_component_id]
+    main_coords = [Nodes[n] for n in main_nodes if n in Nodes]
+    tree = KDTree(main_coords)
+
+    # Map index back to node IDs
+    coord_to_node = {Nodes[n]: n for n in main_nodes if n in Nodes}
+
+    # Add artificial edges for disconnected nodes
+    for node in G.get_vertices():
+        if node_components.get(node) != main_component_id and node in Nodes:
+            latlon = Nodes[node]
+            distance, index = tree.query(latlon)
+            nearest_coords = main_coords[index]
+            nearest_node = coord_to_node[nearest_coords]
+            dist = geodesic(latlon, nearest_coords).meters
+            G.add_edge(node, nearest_node, dist)
+            G.add_edge(nearest_node, node, dist)
+
+
+
 initialize_data()
+
+def calculate_path_distance(path, Nodes):
+    total = 0.0
+    for i in range(len(path) - 1):
+        if path[i] in Nodes and path[i + 1] in Nodes:
+            total += geodesic(Nodes[path[i]], Nodes[path[i + 1]]).meters
+    return total
+
+# We’ll assume a standard walking speed of: 1.4 m/s (~5 km/h or 3.1 mph — typical for campus walking pace)
+def estimate_walk_time_mins(distance_meters, speed_mps=1.4):
+    seconds = distance_meters / speed_mps
+    minutes = round(seconds / 60, 1)
+    return minutes
+
+class UnionFind:
+    def __init__(self):
+        self.parent = {}
+
+    def find(self, u):
+        if self.parent[u] != u:
+            self.parent[u] = self.find(self.parent[u])
+        return self.parent[u]
+
+    def union(self, u, v):
+        u_root = self.find(u)
+        v_root = self.find(v)
+        if u_root != v_root:
+            self.parent[v_root] = u_root
+
+    def add(self, u):
+        if u not in self.parent:
+            self.parent[u] = u
+
+    def connected_components(self):
+        groups = {}
+        for u in self.parent:
+            root = self.find(u)
+            if root not in groups:
+                groups[root] = []
+            groups[root].append(u)
+        return groups
+
+
+def compute_connected_components_with_union_find(graph):
+    uf = UnionFind()
+
+    for u in graph.get_vertices():
+        uf.add(u)
+        for v in graph.neighbors(u):
+            uf.add(v)
+            uf.union(u, v)
+
+    components = {}
+    for u in graph.get_vertices():
+        root = uf.find(u)
+        components[u] = root
+
+    return components
+
+
+# After: initialize_data()
+# Add this new global dictionary
+# Right after initialize_data()
+node_components = compute_connected_components_with_union_find(G)
 
 
 @app.route("/")
@@ -59,37 +195,153 @@ def get_edges():
 
     return jsonify({"edges": edges})
 
+# Not accepting lat/lon input from user
+# @app.route("/compute_meeting", methods=["POST"])
+# def compute_meeting():
+#     """
+#     Compute the best meeting point and paths for three people.
+#     Expects a JSON payload with 'locations': [(lat1, lon1), (lat2, lon2), (lat3, lon3)]
+#     """
+#     data = request.json
+#     people_locations = data.get("locations")
 
-@app.route("/compute_meeting", methods=["POST"])
-def compute_meeting():
-    """
-    Compute the best meeting point and paths for three people.
-    Expects a JSON payload with 'locations': [(lat1, lon1), (lat2, lon2), (lat3, lon3)]
-    """
+#     if not people_locations or len(people_locations) != 3:
+#         return jsonify({"error": "Please provide exactly 3 locations"}), 400
+
+#     # Step 1: Compute Geodesic Fermat Point
+#     fermat_lat, fermat_lon = geodesic_fermat_point(people_locations)
+
+#     # Step 2: Find the nearest graph node
+#     meeting_node = find_nearest_node(G, fermat_lat, fermat_lon, Nodes)
+
+#     # Step 3: Compute shortest paths to meeting node
+#     paths = []
+#     for person_location in people_locations:
+#         start_node = find_nearest_node(G, person_location[0], person_location[1], Nodes)
+#         path = dijkstra(G, start_node, meeting_node)
+#         paths.append(path)
+
+#     return jsonify({
+#         "fermat_point": {"lat": fermat_lat, "lon": fermat_lon},
+#         "meeting_node": meeting_node,
+#         "paths": paths
+#     })
+
+@app.route("/compute_meeting_by_buildings", methods=["POST"])
+def compute_meeting_by_buildings():
     data = request.json
-    people_locations = data.get("locations")
 
-    if not people_locations or len(people_locations) != 3:
-        return jsonify({"error": "Please provide exactly 3 locations"}), 400
+    your_building = data.get("you")
+    friend1_building = data.get("friend1")
+    friend2_building = data.get("friend2")
 
-    # Step 1: Compute Geodesic Fermat Point
-    fermat_lat, fermat_lon = geodesic_fermat_point(people_locations)
+    if not all([your_building, friend1_building, friend2_building]):
+        return jsonify({"error": "Please provide your building and two friends' buildings"}), 400
 
-    # Step 2: Find the nearest graph node
+    buildings = load_buildings()
+    locations = []
+
+    for name in [your_building, friend1_building, friend2_building]:
+        coords = get_building_coordinates(name, buildings)
+        if coords is None:
+            return jsonify({"error": f"Building '{name}' not found"}), 404
+        locations.append(coords)
+
+    # Step 1: Compute Fermat point
+    fermat_lat, fermat_lon = geodesic_fermat_point(locations)
+
+    # Step 2: Find meeting node
     meeting_node = find_nearest_node(G, fermat_lat, fermat_lon, Nodes)
 
-    # Step 3: Compute shortest paths to meeting node
+    # Step 3: Get start nodes for each person
+    start_nodes = []
+    for loc in locations:
+        start_node = find_nearest_node(G, loc[0], loc[1], Nodes)
+        start_nodes.append(start_node)
+
+    # Step 4: Run Dijkstra from each person to the meeting node
     paths = []
-    for person_location in people_locations:
-        start_node = find_nearest_node(G, person_location[0], person_location[1], Nodes)
+    for start_node in start_nodes:
         path = dijkstra(G, start_node, meeting_node)
         paths.append(path)
+
+    path_distances = [calculate_path_distance(p, Nodes) for p in paths]
+
+    path_distances = [calculate_path_distance(p, Nodes) for p in paths]
+    etas = [estimate_walk_time_mins(d) for d in path_distances]
+
+    summaries = [
+        f"You will walk ~{eta} minutes ({round(dist)} meters)."
+        for eta, dist in zip(etas, path_distances)
+    ]
 
     return jsonify({
         "fermat_point": {"lat": fermat_lat, "lon": fermat_lon},
         "meeting_node": meeting_node,
-        "paths": paths
+        "paths": paths,
+        "distances_meters": path_distances,
+        "etas_minutes": etas,
+        "summaries": summaries
     })
+
+@app.route("/autocomplete")
+def autocomplete():
+    query = request.args.get("q", "").strip().lower()
+    if not query:
+        return jsonify([])
+
+    buildings = load_buildings()
+    matches = []
+
+    for b in buildings:
+        all_names = [b["name"]] + b.get("aliases", [])
+        if any(alias.lower().startswith(query) for alias in all_names):
+            matches.append(b["name"])
+        if len(matches) >= 10:
+            break
+
+    return jsonify(matches)
+
+@app.route("/building_info")
+def building_info():
+    name = request.args.get("name", "").strip().lower()
+    if not name:
+        return jsonify({"error": "Missing building name"}), 400
+
+    buildings = load_buildings()
+    for b in buildings:
+        if name == b["name"].lower() or name in [alias.lower() for alias in b.get("aliases", [])]:
+            return jsonify({
+                "name": b["name"],
+                "lat": b["lat"],
+                "lon": b["lon"],
+                "aliases": b.get("aliases", []),
+                "tags": b.get("tags", [])
+            })
+
+    return jsonify({"error": f"Building '{name}' not found"}), 404
+
+@app.route("/buildings_by_filter")
+def buildings_by_filter():
+    tag = request.args.get("type", "").strip().lower()
+    if not tag:
+        return jsonify({"error": "Missing filter type"}), 400
+
+    buildings = load_buildings()
+    filtered = []
+
+    for b in buildings:
+        tags = b.get("tags", [])
+        if any(tag == t.lower() for t in tags):
+            filtered.append({
+                "name": b["name"],
+                "lat": b["lat"],
+                "lon": b["lon"],
+                "aliases": b.get("aliases", []),
+                "tags": tags
+            })
+
+    return jsonify(filtered)
 
 
 def find_nearest_node(graph, lat, lon, nodes):
