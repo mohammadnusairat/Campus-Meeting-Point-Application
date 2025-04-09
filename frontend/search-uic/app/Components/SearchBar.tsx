@@ -1,6 +1,8 @@
 "use client";
 
+import { Search } from "lucide-react";
 import React, { useState, useEffect } from "react";
+import "@/app/Styles/SearchBar.css";
 
 interface SearchBarProps {
   placeholder: string;
@@ -41,13 +43,19 @@ const SearchBar: React.FC<SearchBarProps> = ({ placeholder }) => {
 
   return (
     <div className="search">
-      <div className="searchInputs">
-        <input
-          type="text"
-          placeholder={placeholder}
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-        />
+      <div className="search-icon-placement">
+        <Search />
+      </div>
+      {/* Please place data in its appropriate div  */}
+      <div className="content-search">
+        <div className="search-inputs">
+          <input
+            type="text"
+            placeholder={placeholder}
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+        </div>
       </div>
       {/* Display search results */}
       <div className="dataResult">
