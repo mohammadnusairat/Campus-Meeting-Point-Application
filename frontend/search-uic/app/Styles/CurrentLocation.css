@@ -1,0 +1,26 @@
+.current-location {
+  width: 250px;
+  height: 73px;
+  border-radius: 11px 11px 11px 11px;
+  background: rgba(236, 126, 126, 0.95);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.map-pin-icon-placement {
+  position: absolute;
+  top: 0;
+  left: -19.5px;
+  width: 39px;
+  height: 39px;
+  border-radius: 11px 11px 11px 11px;
+  background: rgba(236, 126, 126, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.content-drop-down {
+}

@@ -1,0 +1,27 @@
+.title-box {
+  width: 275px;
+  height: 65px;
+  border-radius: 11px 11px 11px 11px;
+  background: rgba(198, 204, 225, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 7px;
+}
+
+.title {
+  width: 267px;
+  height: 44px;
+  font-size: 36px;
+  font-weight: 600;
+  /* top: 3px;
+    left: 16px; */
+  color: #202020;
+  /* font-family: Space Grotesk; */ /* Make sure to install this font */
+}
+
+.sub-title {
+  color: #202020;
+  font-size: 18px;
+  /* font-family: Space Grotesk; */ /* Make sure to install this font */
+}
