@@ -1,3 +1,5 @@
+"use client";
+
 import SearchBar from "./Components/SearchBar";
 import EtaDirectionsInfo from "./Components/EtaDirectionsInfo";
 import Title from "./Components/Title";

@@ -64,7 +64,7 @@ def compute_meeting_point(graph, nodes, people_locations):
 def main():
     print("** Finding Best Meeting Location **")
 
-    filename = r"C:\Users\mnusa\CS 351\fgp-hoover10\backend\data\uic-2024.osm"
+    filename = r"../data/uic-2024.osm"
     xml_root = load_open_street_map(filename)
 
     if xml_root is None:
