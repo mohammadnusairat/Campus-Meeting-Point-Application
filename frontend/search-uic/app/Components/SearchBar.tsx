@@ -14,8 +14,8 @@ const SearchBar: React.FC<SearchBarProps> = ({
   placeholder,
   setDestination,
 }) => {
-  const [query, setQuery] = useState("");
-  const [queryResults, setQueryResults] = useState<string[]>([]);
+  const [query, setQuery] = useState(""); // Track input value
+  const [queryResults, setQueryResults] = useState<string[]>([]); // Store API results
 
   const fetchInputQuery = async (searchTerm: string) => {
     if (!searchTerm) {

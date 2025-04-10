@@ -32,3 +32,29 @@
 
 .directions {
 }
+
+.tags {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.tags p {
+  background-color: cornflowerblue;
+  padding: 1px;
+  margin: 2px;
+  border-radius: 4px 4px 4px 4px;
+}
+
+.aliases {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.aliases p {
+  background-color: coral;
+  padding: 1px;
+  margin: 2px;
+  border-radius: 4px 4px 4px 4px;
+}
