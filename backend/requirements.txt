@@ -3,3 +3,6 @@ geopy               # Geodesic distance calculations
 numpy               # Numerical computations for Weiszfeld algorithm
 xmltodict           # Parsing OpenStreetMap (OSM) XML
 gunicorn            # Production-ready WSGI server (optional for deployment)
+
+scipy               # 
+flask_cors          #

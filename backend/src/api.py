@@ -6,16 +6,20 @@ from osm_parser import load_open_street_map, ReadMapNodes, ReadFootways, load_bu
 from geopy.distance import geodesic
 import os
 from scipy.spatial import KDTree
+from flask_cors import CORS
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 app = Flask(__name__)
+CORS(app)
 
 # Global graph instance
 G = Graph()
 Nodes = {}  # {id: (lat, lon)}
 
 # Load OSM data
+
+
 def initialize_data():
     global Nodes, G, node_components
     print("Loading OpenStreetMap data...")
@@ -78,11 +82,13 @@ def initialize_data():
 
     # Sample some main component nodes for faster lookups
     import random
-    main_nodes = [n for n, c in node_components.items() if c == main_component_id]
+    main_nodes = [n for n, c in node_components.items() if c ==
+                  main_component_id]
     sampled_main = random.sample(main_nodes, min(150, len(main_nodes)))
 
     # Create KD-Tree for main component
-    main_nodes = [n for n, c in node_components.items() if c == main_component_id]
+    main_nodes = [n for n, c in node_components.items() if c ==
+                  main_component_id]
     main_coords = [Nodes[n] for n in main_nodes if n in Nodes]
     tree = KDTree(main_coords)
 
@@ -101,8 +107,8 @@ def initialize_data():
             G.add_edge(nearest_node, node, dist)
 
 
-
 initialize_data()
+
 
 def calculate_path_distance(path, Nodes):
     total = 0.0
@@ -112,10 +118,13 @@ def calculate_path_distance(path, Nodes):
     return total
 
 # We’ll assume a standard walking speed of: 1.4 m/s (~5 km/h or 3.1 mph — typical for campus walking pace)
+
+
 def estimate_walk_time_mins(distance_meters, speed_mps=1.4):
     seconds = distance_meters / speed_mps
     minutes = round(seconds / 60, 1)
     return minutes
+
 
 class UnionFind:
     def __init__(self):
@@ -227,6 +236,7 @@ def get_edges():
 #         "paths": paths
 #     })
 
+
 @app.route("/compute_meeting_by_buildings", methods=["POST"])
 def compute_meeting_by_buildings():
     data = request.json
@@ -284,6 +294,7 @@ def compute_meeting_by_buildings():
         "summaries": summaries
     })
 
+
 @app.route("/autocomplete")
 def autocomplete():
     query = request.args.get("q", "").strip().lower()
@@ -301,6 +312,7 @@ def autocomplete():
             break
 
     return jsonify(matches)
+
 
 @app.route("/building_info")
 def building_info():
@@ -320,6 +332,7 @@ def building_info():
             })
 
     return jsonify({"error": f"Building '{name}' not found"}), 404
+
 
 @app.route("/buildings_by_filter")
 def buildings_by_filter():
@@ -350,7 +363,7 @@ def find_nearest_node(graph, lat, lon, nodes):
     """
     min_dist = float('inf')
     nearest_node = None
-    
+
     for node_id, (node_lat, node_lon) in nodes.items():
         d = geodesic((lat, lon), (node_lat, node_lon)).meters
         if d < min_dist:

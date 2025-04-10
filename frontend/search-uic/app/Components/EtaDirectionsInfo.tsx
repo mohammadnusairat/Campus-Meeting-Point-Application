@@ -1,9 +1,9 @@
 import React from "react";
 import { Map } from "lucide-react";
 
-import "@/app/Styles/EtaDirections.css";
+import "@/app/Styles/EtaDirectionsInfo.css";
 
-function EtaDirections() {
+function EtaDirectionsInfo() {
   return (
     <>
       <div className="eta-directions">
@@ -14,10 +14,11 @@ function EtaDirections() {
           {/* Please place data in its appropriate div  */}
           <div className="eta">ETA</div>
           <div className="directions">Directions</div>
+          <div className="info">Info</div>
         </div>
       </div>
     </>
   );
 }
 
-export default EtaDirections;
+export default EtaDirectionsInfo;
