@@ -240,43 +240,31 @@ def get_edges():
 @app.route("/compute_meeting_by_buildings", methods=["POST"])
 def compute_meeting_by_buildings():
     data = request.json
+    building_names = data.get("buildings")
 
-    your_building = data.get("you")
-    friend1_building = data.get("friend1")
-    friend2_building = data.get("friend2")
-
-    if not all([your_building, friend1_building, friend2_building]):
-        return jsonify({"error": "Please provide your building and two friends' buildings"}), 400
+    if not building_names or not isinstance(building_names, list) or len(building_names) < 2:
+        return jsonify({"error": "Please provide at least two building names"}), 400
 
     buildings = load_buildings()
     locations = []
 
-    for name in [your_building, friend1_building, friend2_building]:
+    for name in building_names:
         coords = get_building_coordinates(name, buildings)
         if coords is None:
             return jsonify({"error": f"Building '{name}' not found"}), 404
         locations.append(coords)
 
-    # Step 1: Compute Fermat point
+    # Compute Fermat point from N users
     fermat_lat, fermat_lon = geodesic_fermat_point(locations)
 
-    # Step 2: Find meeting node
+    # Find closest walkable node to the Fermat point
     meeting_node = find_nearest_node(G, fermat_lat, fermat_lon, Nodes)
 
-    # Step 3: Get start nodes for each person
-    start_nodes = []
-    for loc in locations:
-        start_node = find_nearest_node(G, loc[0], loc[1], Nodes)
-        start_nodes.append(start_node)
+    # Map each user to a start node
+    start_nodes = [find_nearest_node(G, lat, lon, Nodes) for lat, lon in locations]
 
-    # Step 4: Run Dijkstra from each person to the meeting node
-    paths = []
-    for start_node in start_nodes:
-        path = dijkstra(G, start_node, meeting_node)
-        paths.append(path)
-
-    path_distances = [calculate_path_distance(p, Nodes) for p in paths]
-
+    # Run Dijkstra from each person
+    paths = [dijkstra(G, start, meeting_node) for start in start_nodes]
     path_distances = [calculate_path_distance(p, Nodes) for p in paths]
     etas = [estimate_walk_time_mins(d) for d in path_distances]
 
@@ -293,6 +281,7 @@ def compute_meeting_by_buildings():
         "etas_minutes": etas,
         "summaries": summaries
     })
+
 
 
 @app.route("/autocomplete")
