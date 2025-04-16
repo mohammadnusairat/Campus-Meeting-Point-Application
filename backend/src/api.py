@@ -18,8 +18,6 @@ G = Graph()
 Nodes = {}  # {id: (lat, lon)}
 
 # Load OSM data
-
-
 def initialize_data():
     global Nodes, G, node_components
     print("Loading OpenStreetMap data...")
@@ -106,26 +104,6 @@ def initialize_data():
             G.add_edge(node, nearest_node, dist)
             G.add_edge(nearest_node, node, dist)
 
-
-initialize_data()
-
-
-def calculate_path_distance(path, Nodes):
-    total = 0.0
-    for i in range(len(path) - 1):
-        if path[i] in Nodes and path[i + 1] in Nodes:
-            total += geodesic(Nodes[path[i]], Nodes[path[i + 1]]).meters
-    return total
-
-# We’ll assume a standard walking speed of: 1.4 m/s (~5 km/h or 3.1 mph — typical for campus walking pace)
-
-
-def estimate_walk_time_mins(distance_meters, speed_mps=1.4):
-    seconds = distance_meters / speed_mps
-    minutes = round(seconds / 60, 1)
-    return minutes
-
-
 class UnionFind:
     def __init__(self):
         self.parent = {}
@@ -154,7 +132,6 @@ class UnionFind:
             groups[root].append(u)
         return groups
 
-
 def compute_connected_components_with_union_find(graph):
     uf = UnionFind()
 
@@ -171,17 +148,42 @@ def compute_connected_components_with_union_find(graph):
 
     return components
 
-
-# After: initialize_data()
-# Add this new global dictionary
-# Right after initialize_data()
+initialize_data()
+# Right after initialize_data(), add this new global dictionary
 node_components = compute_connected_components_with_union_find(G)
+
+def calculate_path_distance(path, Nodes):
+    total = 0.0
+    for i in range(len(path) - 1):
+        if path[i] in Nodes and path[i + 1] in Nodes:
+            total += geodesic(Nodes[path[i]], Nodes[path[i + 1]]).meters
+    return total
+
+# We’ll assume a standard walking speed of: 1.4 m/s (~5 km/h or 3.1 mph — typical for campus walking pace)
+def estimate_walk_time_mins(distance_meters, speed_mps=1.4):
+    seconds = distance_meters / speed_mps
+    minutes = round(seconds / 60, 1)
+    return minutes
+
+def find_nearest_node(graph, lat, lon, nodes):
+    """
+    Find the nearest node in the graph to a given lat/lon location.
+    """
+    min_dist = float('inf')
+    nearest_node = None
+
+    for node_id, (node_lat, node_lon) in nodes.items():
+        d = geodesic((lat, lon), (node_lat, node_lon)).meters
+        if d < min_dist:
+            min_dist = d
+            nearest_node = node_id
+
+    return nearest_node
 
 
 @app.route("/")
 def home():
     return jsonify({"message": "Geodesic Meeting Point API is running!"})
-
 
 @app.route("/graph/nodes", methods=["GET"])
 def get_nodes():
@@ -189,7 +191,6 @@ def get_nodes():
     Retrieve all graph nodes.
     """
     return jsonify({"nodes": Nodes})
-
 
 @app.route("/graph/edges", methods=["GET"])
 def get_edges():
@@ -236,7 +237,6 @@ def get_edges():
 #         "paths": paths
 #     })
 
-
 @app.route("/compute_meeting_by_buildings", methods=["POST"])
 def compute_meeting_by_buildings():
     data = request.json
@@ -282,8 +282,6 @@ def compute_meeting_by_buildings():
         "summaries": summaries
     })
 
-
-
 @app.route("/autocomplete")
 def autocomplete():
     query = request.args.get("q", "").strip().lower()
@@ -301,7 +299,6 @@ def autocomplete():
             break
 
     return jsonify(matches)
-
 
 @app.route("/building_info")
 def building_info():
@@ -321,7 +318,6 @@ def building_info():
             })
 
     return jsonify({"error": f"Building '{name}' not found"}), 404
-
 
 @app.route("/buildings_by_filter")
 def buildings_by_filter():
@@ -344,22 +340,6 @@ def buildings_by_filter():
             })
 
     return jsonify(filtered)
-
-
-def find_nearest_node(graph, lat, lon, nodes):
-    """
-    Find the nearest node in the graph to a given lat/lon location.
-    """
-    min_dist = float('inf')
-    nearest_node = None
-
-    for node_id, (node_lat, node_lon) in nodes.items():
-        d = geodesic((lat, lon), (node_lat, node_lon)).meters
-        if d < min_dist:
-            min_dist = d
-            nearest_node = node_id
-
-    return nearest_node
 
 
 if __name__ == "__main__":
