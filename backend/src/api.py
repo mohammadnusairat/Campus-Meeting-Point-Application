@@ -7,11 +7,17 @@ from geopy.distance import geodesic
 import os
 from scipy.spatial import KDTree
 from flask_cors import CORS
+import trie
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 app = Flask(__name__)
 CORS(app)
+
+json_file = "/home/itorres2/CS/351/fgp-hoover10/backend/data/buildings.json"
+
+# global trie for lookup
+autocomplete_trie = trie.build_trie_from_buildings(json_file)
 
 # Global graph instance
 G = Graph()
@@ -151,6 +157,7 @@ def compute_connected_components_with_union_find(graph):
 initialize_data()
 # Right after initialize_data(), add this new global dictionary
 node_components = compute_connected_components_with_union_find(G)
+# Use buildings json to build trie load_buildings()
 
 def calculate_path_distance(path, Nodes):
     total = 0.0
@@ -287,18 +294,7 @@ def autocomplete():
     query = request.args.get("q", "").strip().lower()
     if not query:
         return jsonify([])
-
-    buildings = load_buildings()
-    matches = []
-
-    for b in buildings:
-        all_names = [b["name"]] + b.get("aliases", [])
-        if any(alias.lower().startswith(query) for alias in all_names):
-            matches.append(b["name"])
-        if len(matches) >= 10:
-            break
-
-    return jsonify(matches)
+    return jsonify(autocomplete_trie.search(query))
 
 @app.route("/building_info")
 def building_info():

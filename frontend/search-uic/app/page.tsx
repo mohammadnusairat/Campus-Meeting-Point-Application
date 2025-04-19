@@ -10,25 +10,23 @@ import "@/app/Styles/Page.css";
 import { useState } from "react";
 
 export default function Home() {
-  const [destination, setDestination] = useState("");
+  const [destination, setDestination] = useState<SearchResult | null>(null); // Store the entire search result object
   const [destinations, setDestinations] = useState([]);
-  // const [curLocation, setCurLocation] = useState("");
-  // const [filter, setFilter] = useState(""); // Also known as tag in the api
 
   return (
-    // Please place data in its appropriate div/component
     <div className="Home">
       <div className="title-search-location">
         <Title />
         <SearchBar
           placeholder="Enter Building Name"
-          destination={destination}
+          destination={destination?.name || ""} // Pass the name if destination is not null
           setDestination={setDestination}
         />
         <CurrentLocation />
       </div>
       <div className="eta-filter">
-        <EtaDirectionsInfo destination={destination} />
+        <EtaDirectionsInfo destination={destination} />{" "}
+        {/* Pass the entire object */}
         <Filter setDestinations={setDestinations} />
       </div>
       <div>

@@ -10,12 +10,20 @@ interface SearchBarProps {
   setDestination: Dispatch<SetStateAction<string>>;
 }
 
+interface SearchResult {
+  name: string;
+  tags: string[];
+  aliases: string[];
+  lat: number;
+  lon: number;
+}
+
 const SearchBar: React.FC<SearchBarProps> = ({
   placeholder,
   setDestination,
 }) => {
   const [query, setQuery] = useState(""); // Track input value
-  const [queryResults, setQueryResults] = useState<string[]>([]); // Store API results
+  const [queryResults, setQueryResults] = useState<SearchResult[]>([]); // Store API results
 
   const fetchInputQuery = async (searchTerm: string) => {
     if (!searchTerm) {
@@ -27,7 +35,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
       const response = await fetch(
         `http://127.0.0.1:5000/autocomplete?q=${searchTerm}`
       );
-      const data = await response.json();
+      const data: SearchResult[] = await response.json();
       setQueryResults(data);
     } catch (error) {
       console.error("Error fetching search results:", error);
@@ -61,12 +69,12 @@ const SearchBar: React.FC<SearchBarProps> = ({
             <p
               key={index}
               onClick={() => {
-                setDestination(item);
-                setQuery(item); // Optional: fill input with selected value
+                setDestination(item); // Pass the entire object instead of just the name
+                setQuery(item.name); // Optional: fill input with selected value
                 setQueryResults([]); // Optional: close dropdown
               }}
             >
-              {item}
+              {item.name} {/* Display the "name" field */}
             </p>
           ))
         ) : query.length > 0 ? (
