@@ -30,23 +30,28 @@ class Trie:
         curr_node.lat = lat  
         curr_node.lon = lon  
 
-    def search(self, prefix):
+    def search(self, prefix, filters=None):
         curr_node = self.root
+        # check if prefix is valid
         for char in prefix:
             lower_char = char.lower()  
             if lower_char not in curr_node.children:
                 return []
             curr_node = curr_node.children[lower_char]
-        return self._collect_words(curr_node, prefix)
+        # return all words with valid prefix
+        return self._collect_words(curr_node, prefix, filters)
 
-    def _collect_words(self, node, prefix, seen=None):
-        # will store unqiue building names
+    def _collect_words(self, node, prefix, filters, seen=None):
+        # will store unique building names
         if seen is None:
             seen = set()  
 
         results = []
-        if node.isWord and node.original_name not in seen:
-            # will be returned to autcomplete api call
+        # if node is a word that does not exist in seen, 
+        # and if it has the right tags (either all or None), add it to results
+        if (node.isWord and node.original_name not in seen
+            and 
+            filters is None or all(tag in node.tags for tag in filters)):
             results.append({
                 "name": node.original_name,  
                 "tags": node.tags,
@@ -55,9 +60,10 @@ class Trie:
                 "lon": node.lon   
             })
             seen.add(node.original_name)  
-
+        
+        # check words in children nodes
         for child in node.children.values():
-            results.extend(self._collect_words(child, prefix + child.ch, seen))
+            results.extend(self._collect_words(child, prefix + child.ch, filters, seen))
         return results
 
 def build_trie_from_buildings(json_file):
@@ -85,14 +91,30 @@ def build_trie_from_buildings(json_file):
 
 # For testing
 if __name__ == "__main__":
-    # Path to buildings.json
-    json_file = "/home/itorres2/CS/351/fgp-hoover10/backend/data/buildings.json"
+    ####    ####    ####    ####    ####
+    # These are all possible filters
+    # "Bathroom",
+    # "Study Spots",
+    # "Lounges",
+    # "Quiet Spots",
+    # "Loud Spots",
+    # "Professors' Offices",
+    # "Lecture Hall"
+    ####    ####    ####    ####    ####
 
     # Build the trie
-    trie = build_trie_from_buildings(json_file)
+    trie = build_trie_from_buildings(
+        "/home/itorres2/CS/351/fgp-hoover10/backend/data/buildings.json"
+        )
 
     # Test autocomplete
-    prefix = "s"  
-    results = trie.search(prefix)
+    prefix = "B"  
+    filters = []
+    results = trie.search(prefix, filters)
     for result in results:
-        print(f"Name: {result['name']}, \nTags: {result['tags']}, \nAliases: {result['aliases']}, \nLat: {result['lat']}, Lon: {result['lon']}\n")
+        print(
+            f"Name: {result['name']}, \n"
+            f"Tags: {result['tags']}, \n"
+            f"Aliases: {result['aliases']}, \n"
+            f"Lat: {result['lat']}, Lon: {result['lon']}\n"
+        )
