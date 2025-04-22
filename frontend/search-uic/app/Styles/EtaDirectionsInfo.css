@@ -2,7 +2,7 @@
   height: 453px;
   width: 468px;
   border-radius: 11px 11px 11px 11px;
-  background: rgba(229, 215, 192, 0.95);
+  background: rgba(229, 215, 192);
   position: relative;
   display: flex;
   align-items: center;
@@ -18,7 +18,7 @@
   height: 39px;
   width: 39px;
   border-radius: 11px 11px 11px 11px;
-  background: rgba(229, 215, 192, 0.95);
+  background: rgba(229, 215, 192);
   display: flex;
   align-items: center;
   justify-content: center;

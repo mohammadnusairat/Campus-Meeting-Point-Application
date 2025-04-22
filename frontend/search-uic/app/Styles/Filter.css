@@ -1,8 +1,10 @@
 .filter {
-  width: 468px;
-  height: 168px;
+  /* width: 468px;
+  height: 168px; */
+  width: 200px;
+  height: 200px;
   border-radius: 11px 11px 11px 11px;
-  background: rgba(240, 208, 122, 0.95);
+  background: rgba(240, 208, 122);
   position: relative;
   display: flex;
   align-items: center;
@@ -18,7 +20,7 @@
   width: 39px;
   height: 39px;
   border-radius: 11px 11px 11px 11px;
-  background: rgba(240, 208, 122, 0.95);
+  background: rgba(240, 208, 122);
   display: flex;
   align-items: center;
   justify-content: center;

@@ -7,7 +7,7 @@
   height: 80px; /* Increased height for a larger search bar */
   width: 600px; /* Increased width for a more spacious search bar */
   border-radius: 12px; /* Rounded corners for a smooth look */
-  background: rgba(126, 154, 236, 0.95); /* Blue background */
+  background: rgba(126, 154, 236); /* Blue background */
   position: relative;
   display: flex;
   align-items: center;
@@ -23,7 +23,7 @@
   height: 50px; /* Increased size for the icon */
   width: 50px; /* Increased size for the icon */
   border-radius: 12px;
-  background: rgba(126, 154, 236, 0.95); /* Matches the blue */
+  background: rgba(126, 154, 236); /* Matches the blue */
   display: flex;
   align-items: center;
   justify-content: center;

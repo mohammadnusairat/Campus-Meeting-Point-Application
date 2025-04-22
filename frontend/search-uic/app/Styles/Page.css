@@ -1,20 +1,32 @@
+.background-map {
+  position: absolute;
+  z-index: -1;
+  width: 100.5%;
+  height: 101%;
+  left: -0.5%;
+  top: -1%;
+}
+
 .Home {
   padding-top: 1%;
+  width: 98vw;
+  height: 100%;
 }
 
 .title-search-location {
-  /* background-color: red; */
   display: flex;
   flex-direction: row;
-  align-items: center;
-  /* width: 98vw; */
+  align-items: left;
+  width: 100%;
+  height: 100%;
   justify-content: space-evenly;
   padding: 2%;
 }
 
 .eta-filter {
-  display: flex;
+  display: inline-flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: space-evenly;
+  position: absolute;
 }

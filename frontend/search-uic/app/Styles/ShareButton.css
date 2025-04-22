@@ -1,0 +1,30 @@
+.share-button {
+  width: 250px;
+  height: 73px;
+  border-radius: 11px 11px 11px 11px;
+  background: rgb(233, 154, 105);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.share-icon-placement {
+  position: absolute;
+  top: 0;
+  left: -19.5px;
+  width: 39px;
+  height: 39px;
+  border-radius: 12px;
+  background: rgb(233, 154, 105);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.copy-pin-link {
+  width: 210px;
+  height: 50px;
+  border-radius: 11px 11px 11px 11px;
+  background: rgba(255, 255, 255, 0.95);
+}
