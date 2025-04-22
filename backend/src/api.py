@@ -299,7 +299,10 @@ def autocomplete():
     if not prefix:
         return jsonify([])
     
-    return jsonify(autocomplete_trie.search(prefix, filters_list))
+    result = autocomplete_trie.search(prefix, filters_list)
+    # just to show filters work
+    print(len(result))
+    return jsonify(result)
 
 @app.route("/building_info")
 def building_info():
