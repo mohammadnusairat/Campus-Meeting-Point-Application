@@ -4,10 +4,18 @@ import { Search } from "lucide-react";
 import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
 import "@/app/Styles/SearchBar.css";
 
+interface SearchResult {
+  name: string;
+  tags: string[];
+  aliases: string[];
+  lat: number;
+  lon: number;
+}
+
 interface SearchBarProps {
   placeholder: string;
   setSelectedPin: Dispatch<SetStateAction<string>>;
-  setDestination: Dispatch<SetStateAction<{}>>;
+  setDestinations: Dispatch<SetStateAction<never[]>>;
   filters: string[];
   filteredLocations: boolean[];
   setFilteredLocations: Dispatch<SetStateAction<boolean[]>>;
@@ -16,20 +24,21 @@ interface SearchBarProps {
 const SearchBar: React.FC<SearchBarProps> = ({
   placeholder,
   setSelectedPin,
-  setDestination,
+  setDestinations,
   filters,
   filteredLocations,
   setFilteredLocations,
 }) => {
   const [query, setQuery] = useState(""); // Track input value
   const [queryResults, setQueryResults] = useState<SearchResult[]>([]); // Store API results
-  const filters = ["Professors' Offices"];
+  // const filters = ["Professors' Offices"];
 
   const fetchInputQuery = async (searchTerm: string) => {
     if (!searchTerm) {
       setQueryResults([]);
       return;
     }
+    // console.log(filteredLocations);
     // Updating the list of filters requested
     const updatedFilters = [];
     for (let i = 0; i < filters.length; i++) {
@@ -50,29 +59,33 @@ const SearchBar: React.FC<SearchBarProps> = ({
       const response = await fetch(
         `http://127.0.0.1:5000/autocomplete?prefix=${searchTerm}&filters=${filtersParam}`
       );
-      const data: SearchResult[] = await response.json();
+      const data: [] = await response.json();
+      console.log("fetchInputQuery");
+      console.log(data);
+      // setDestination(data);
+      setDestinations(data);
       setQueryResults(data);
     } catch (error) {
       console.error("Error fetching search results:", error);
     }
   };
 
-  const fetchDestinationInfo = async (searchTerm: string) => {
-    if (!searchTerm) {
-      return;
-    }
+  // const fetchDestinationInfo = async (searchTerm: string) => {
+  //   if (!searchTerm) {
+  //     return;
+  //   }
 
-    try {
-      const response = await fetch(
-        `http://127.0.0.1:5000/building_info?name=${searchTerm}`
-      );
-      const data = await response.json();
-      console.log(data);
-      setDestination(data);
-    } catch (error) {
-      console.error("Error fetching queried destination info:", error);
-    }
-  };
+  //   try {
+  //     const response = await fetch(
+  //       `http://127.0.0.1:5000/building_info?name=${searchTerm}`
+  //     );
+  //     const data = await response.json();
+  //     console.log(data);
+  //     setDestination(data);
+  //   } catch (error) {
+  //     console.error("Error fetching queried destination info:", error);
+  //   }
+  // };
 
   useEffect(() => {
     const delay = setTimeout(() => {
@@ -105,13 +118,14 @@ const SearchBar: React.FC<SearchBarProps> = ({
             <p
               key={index}
               onClick={() => {
-                setSelectedPin(location);
-                setQuery(location); // Optional: fill input with selected value
-                fetchDestinationInfo(location);
+                setSelectedPin(location.name);
+                setQuery(location.name); // Optional: fill input with selected value
+                // fetchDestinationInfo(location);
+                // fetchInputQuery(location); // test
                 setQueryResults([]); // Optional: close dropdown
               }}
             >
-              {location}
+              {location.name}
             </p>
           ))
         ) : query.length > 0 ? (

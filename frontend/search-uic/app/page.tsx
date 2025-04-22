@@ -20,9 +20,19 @@ import Filter from "./Components/Filter";
 import "@/app/Styles/Page.css";
 import ClosestSpotFinder from "./Components/ClosestSpotFinder";
 import { setDefaultAutoSelectFamily } from "net";
+import { Interface } from "readline";
 
 // configDotenv({ path: "./.env" }); // Unecessary in Nextjs. Nextjs loads the .env file itself.
 
+interface DestinationData {
+  aliases: string[];
+  lat: Number;
+  lon: Number;
+  name: string;
+  tags: string[];
+}
+
+// aliases, lat, lon, name, tags}
 export default function Home() {
   const [destination, setDestination] = useState({});
   const [destinations, setDestinations] = useState([]);
@@ -96,7 +106,7 @@ export default function Home() {
                     <SearchBar
                       placeholder="Enter Building Name"
                       setSelectedPin={setSelectedPin}
-                      setDestination={setDestination}
+                      setDestinations={setDestinations}
                       filters={filters}
                       filteredLocations={filteredLocations}
                       setFilteredLocations={setFilteredLocations}
@@ -129,7 +139,7 @@ export default function Home() {
               >
                 {/* Note: Red errors are normal since it doesn't know what object destination(s) is/are */}
                 {/* A single destination */}
-                {destination.lat && destination.lon && (
+                {/* {destination.lat && destination.lon && (
                   <AdvancedMarker
                     onClick={() => {
                       setSelectedPin(destination.name);
@@ -150,10 +160,10 @@ export default function Home() {
                       scale={1.5}
                     />
                   </AdvancedMarker>
-                )}
+                )} */}
                 {/* Many destinations */}
                 {destinations &&
-                  destinations.map((item, index) => (
+                  destinations.map((item: DestinationData, index) => (
                     <AdvancedMarker
                       onClick={() => {
                         setSelectedPin(item.name);
