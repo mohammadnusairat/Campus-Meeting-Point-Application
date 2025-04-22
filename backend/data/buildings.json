@@ -10,11 +10,7 @@
     ],
     "lat": 41.87248371,
     "lon": -87.64651215,
-    "tags": [
-      "Bathroom",
-      "Lounges",
-      "Loud Spots"
-    ]
+    "tags": ["Bathroom", "Lounges", "Loud Spots"]
   },
   {
     "name": "UIC Utilities Building",
@@ -27,66 +23,32 @@
     ],
     "lat": 41.86840534,
     "lon": -87.65160268,
-    "tags": [
-      "Quiet Spots"
-    ]
+    "tags": ["Quiet Spots"]
   },
   {
     "name": "Theater (UICT)",
-    "aliases": [
-      "tu",
-      "theater",
-      "uict",
-      "theater (uict)"
-    ],
+    "aliases": ["tu", "theater", "uict", "theater (uict)"],
     "lat": 41.87459696,
     "lon": -87.65335890000001,
-    "tags": [
-      "Bathroom",
-      "Lounges",
-      "Loud Spots"
-    ]
+    "tags": ["Bathroom", "Lounges", "Loud Spots"]
   },
   {
     "name": "Jefferson Hall",
-    "aliases": [
-      "jh",
-      "jefferson hall",
-      "jefferson",
-      "hall"
-    ],
+    "aliases": ["jh", "jefferson hall", "jefferson", "hall"],
     "lat": 41.8740434,
     "lon": -87.65027909166666,
-    "tags": [
-      "Professors' Offices",
-      "Quiet Spots"
-    ]
+    "tags": ["Professors' Offices", "Quiet Spots"]
   },
   {
     "name": "Henry Hall",
-    "aliases": [
-      "henry hall",
-      "hall",
-      "hh",
-      "henry"
-    ],
+    "aliases": ["henry hall", "hall", "hh", "henry"],
     "lat": 41.8740855625,
     "lon": -87.6505393,
-    "tags": [
-      "Professors' Offices",
-      "Quiet Spots"
-    ]
+    "tags": ["Professors' Offices", "Quiet Spots"]
   },
   {
     "name": "Behavioral Sciences Building (BSB)",
-    "aliases": [
-      "bsbb",
-      "sciences",
-      "behavioral sciences building (bsb)",
-      "bsb",
-      "behavioral",
-      "building"
-    ],
+    "aliases": ["sciences", "bsb", "behavioral", "building"],
     "lat": 41.873750019767456,
     "lon": -87.65289872965118,
     "tags": [
@@ -111,11 +73,7 @@
     ],
     "lat": 41.872115550000004,
     "lon": -87.64988873333334,
-    "tags": [
-      "Bathroom",
-      "Loud Spots",
-      "Lecture Hall"
-    ]
+    "tags": ["Bathroom", "Loud Spots", "Lecture Hall"]
   },
   {
     "name": "Lecture Center D (LCD)",
@@ -129,11 +87,7 @@
     ],
     "lat": 41.8717322,
     "lon": -87.64874052,
-    "tags": [
-      "Bathroom",
-      "Loud Spots",
-      "Lecture Hall"
-    ]
+    "tags": ["Bathroom", "Loud Spots", "Lecture Hall"]
   },
   {
     "name": "Lecture Center E (LCE)",
@@ -147,28 +101,14 @@
     ],
     "lat": 41.87161498571429,
     "lon": -87.64923004285716,
-    "tags": [
-      "Bathroom",
-      "Loud Spots",
-      "Lecture Hall"
-    ]
+    "tags": ["Bathroom", "Loud Spots", "Lecture Hall"]
   },
   {
     "name": "University Hall (UH)",
-    "aliases": [
-      "uhu",
-      "uh",
-      "university",
-      "university hall (uh)",
-      "hall"
-    ],
+    "aliases": ["uhu", "uh", "university", "university hall (uh)", "hall"],
     "lat": 41.873763999999994,
     "lon": -87.6510301,
-    "tags": [
-      "Bathroom",
-      "Professors' Offices",
-      "Quiet Spots"
-    ]
+    "tags": ["Bathroom", "Professors' Offices", "Quiet Spots"]
   },
   {
     "name": "Lecture Center C (LCC)",
@@ -182,11 +122,7 @@
     ],
     "lat": 41.87212553333333,
     "lon": -87.64870404999999,
-    "tags": [
-      "Bathroom",
-      "Loud Spots",
-      "Lecture Hall"
-    ]
+    "tags": ["Bathroom", "Loud Spots", "Lecture Hall"]
   },
   {
     "name": "Lecture Center B (LCB)",
@@ -200,11 +136,7 @@
     ],
     "lat": 41.87220708,
     "lon": -87.64930158,
-    "tags": [
-      "Bathroom",
-      "Loud Spots",
-      "Lecture Hall"
-    ]
+    "tags": ["Bathroom", "Loud Spots", "Lecture Hall"]
   },
   {
     "name": "Lecture Center F (LCF)",
@@ -218,11 +150,7 @@
     ],
     "lat": 41.87171524,
     "lon": -87.64984283999999,
-    "tags": [
-      "Bathroom",
-      "Loud Spots",
-      "Lecture Hall"
-    ]
+    "tags": ["Bathroom", "Loud Spots", "Lecture Hall"]
   },
   {
     "name": "Student Center East (SCE)",
@@ -247,13 +175,7 @@
   },
   {
     "name": "Douglass Hall (DH)",
-    "aliases": [
-      "douglass",
-      "dhd",
-      "douglass hall (dh)",
-      "dh",
-      "hall"
-    ],
+    "aliases": ["douglass", "dhd", "douglass hall (dh)", "dh", "hall"],
     "lat": 41.872820999999995,
     "lon": -87.6491346777778,
     "tags": [
@@ -278,46 +200,21 @@
     ],
     "lat": 41.871851680952375,
     "lon": -87.6504440047619,
-    "tags": [
-      "Bathroom",
-      "Study Spots",
-      "Lounges",
-      "Quiet Spots"
-    ]
+    "tags": ["Bathroom", "Study Spots", "Lounges", "Quiet Spots"]
   },
   {
     "name": "Grant Hall (GH)",
-    "aliases": [
-      "gh",
-      "grant hall (gh)",
-      "ghg",
-      "grant",
-      "hall"
-    ],
+    "aliases": ["gh", "grant hall (gh)", "ghg", "grant", "hall"],
     "lat": 41.872905107692304,
     "lon": -87.64944320000001,
-    "tags": [
-      "Study Spots",
-      "Quiet Spots",
-      "Lecture Hall"
-    ]
+    "tags": ["Study Spots", "Quiet Spots", "Lecture Hall"]
   },
   {
     "name": "Lincoln Hall (LH)",
-    "aliases": [
-      "lincoln",
-      "lhl",
-      "lincoln hall (lh)",
-      "lh",
-      "hall"
-    ],
+    "aliases": ["lincoln", "lhl", "lincoln hall (lh)", "lh", "hall"],
     "lat": 41.87256209000001,
     "lon": -87.64922835,
-    "tags": [
-      "Study Spots",
-      "Quiet Spots",
-      "Lecture Hall"
-    ]
+    "tags": ["Study Spots", "Quiet Spots", "Lecture Hall"]
   },
   {
     "name": "Student Center East Tower (SCET)",
@@ -343,21 +240,10 @@
   },
   {
     "name": "Stevenson Hall (SH)",
-    "aliases": [
-      "stevenson",
-      "sh",
-      "stevenson hall (sh)",
-      "shs",
-      "hall"
-    ],
+    "aliases": ["stevenson", "sh", "stevenson hall (sh)", "shs", "hall"],
     "lat": 41.87287456666667,
     "lon": -87.65046806666666,
-    "tags": [
-      "Bathroom",
-      "Lecture Hall",
-      "Professors' Offices",
-      "Quiet Spots"
-    ]
+    "tags": ["Bathroom", "Lecture Hall", "Professors' Offices", "Quiet Spots"]
   },
   {
     "name": "Art & Architecture Building (AA)",
@@ -382,31 +268,14 @@
   },
   {
     "name": "Commons West (CMW)",
-    "aliases": [
-      "cmw",
-      "cwc",
-      "commons west (cmw)",
-      "west",
-      "commons"
-    ],
+    "aliases": ["cmw", "cwc", "commons west (cmw)", "west", "commons"],
     "lat": 41.87418683084112,
     "lon": -87.64917916448599,
-    "tags": [
-      "Bathroom",
-      "Study Spots",
-      "Lounges",
-      "Quiet Spots"
-    ]
+    "tags": ["Bathroom", "Study Spots", "Lounges", "Quiet Spots"]
   },
   {
     "name": "Addams Hall (AH)",
-    "aliases": [
-      "ah",
-      "addams",
-      "aha",
-      "hall",
-      "addams hall (ah)"
-    ],
+    "aliases": ["ah", "addams", "aha", "hall", "addams hall (ah)"],
     "lat": 41.87097953333333,
     "lon": -87.6490794222222,
     "tags": [
@@ -429,28 +298,14 @@
     ],
     "lat": 41.87085051904762,
     "lon": -87.65037487142857,
-    "tags": [
-      "Bathroom",
-      "Professors' Offices",
-      "Quiet Spots"
-    ]
+    "tags": ["Bathroom", "Professors' Offices", "Quiet Spots"]
   },
   {
     "name": "Burnham Hall (BH)",
-    "aliases": [
-      "bh",
-      "bhb",
-      "burnham",
-      "burnham hall (bh)",
-      "hall"
-    ],
+    "aliases": ["bh", "bhb", "burnham", "burnham hall (bh)", "hall"],
     "lat": 41.87099858571428,
     "lon": -87.64931629285715,
-    "tags": [
-      "Study Spots",
-      "Quiet Spots",
-      "Lecture Hall"
-    ]
+    "tags": ["Study Spots", "Quiet Spots", "Lecture Hall"]
   },
   {
     "name": "Engineering Research Facility (ERF)",
@@ -464,29 +319,14 @@
     ],
     "lat": 41.8699737923077,
     "lon": -87.64823453076923,
-    "tags": [
-      "Bathroom",
-      "Professors' Offices",
-      "Quiet Spots"
-    ]
+    "tags": ["Bathroom", "Professors' Offices", "Quiet Spots"]
   },
   {
     "name": "Taft Hall (TH)",
-    "aliases": [
-      "taft",
-      "th",
-      "tht",
-      "taft hall (th)",
-      "hall"
-    ],
+    "aliases": ["taft", "th", "tht", "taft hall (th)", "hall"],
     "lat": 41.87122885714285,
     "lon": -87.64930457142857,
-    "tags": [
-      "Bathroom",
-      "Lecture Hall",
-      "Professors' Offices",
-      "Quiet Spots"
-    ]
+    "tags": ["Bathroom", "Lecture Hall", "Professors' Offices", "Quiet Spots"]
   },
   {
     "name": "Science and Engineering Laboratories (SEL)",
@@ -522,11 +362,7 @@
     ],
     "lat": 41.86660375348837,
     "lon": -87.64943322093022,
-    "tags": [
-      "Bathroom",
-      "Lounges",
-      "Loud Spots"
-    ]
+    "tags": ["Bathroom", "Lounges", "Loud Spots"]
   },
   {
     "name": "Roosevelt Road Building",
@@ -539,10 +375,7 @@
     ],
     "lat": 41.86766312727272,
     "lon": -87.64593633636365,
-    "tags": [
-      "Quiet Spots",
-      "Professors' Offices"
-    ]
+    "tags": ["Quiet Spots", "Professors' Offices"]
   },
   {
     "name": "Education, Theater, Music, and Social Work Building (ETMSW)",
@@ -582,12 +415,7 @@
     ],
     "lat": 41.8642873,
     "lon": -87.64745856249999,
-    "tags": [
-      "Bathroom",
-      "Study Spots",
-      "Lounges",
-      "Quiet Spots"
-    ]
+    "tags": ["Bathroom", "Study Spots", "Lounges", "Quiet Spots"]
   },
   {
     "name": "Science Engineering South (SES)",
@@ -622,11 +450,7 @@
     ],
     "lat": 41.874849813333334,
     "lon": -87.65785432666668,
-    "tags": [
-      "Bathroom",
-      "Lounges",
-      "Quiet Spots"
-    ]
+    "tags": ["Bathroom", "Lounges", "Quiet Spots"]
   },
   {
     "name": "Thomas Beckham Hall (TBH)",
@@ -640,28 +464,14 @@
     ],
     "lat": 41.86572578684211,
     "lon": -87.64729927894736,
-    "tags": [
-      "Bathroom",
-      "Study Spots",
-      "Lounges",
-      "Quiet Spots"
-    ]
+    "tags": ["Bathroom", "Study Spots", "Lounges", "Quiet Spots"]
   },
   {
     "name": "UIC Forum",
-    "aliases": [
-      "uf",
-      "forum",
-      "uic",
-      "uic forum"
-    ],
+    "aliases": ["uf", "forum", "uic", "uic forum"],
     "lat": 41.86663170000001,
     "lon": -87.64607115714286,
-    "tags": [
-      "Bathroom",
-      "Lounges",
-      "Loud Spots"
-    ]
+    "tags": ["Bathroom", "Lounges", "Loud Spots"]
   },
   {
     "name": "UIC Physical Plant Building",
@@ -675,9 +485,7 @@
     ],
     "lat": 41.867664625,
     "lon": -87.65175779999998,
-    "tags": [
-      "Quiet Spots"
-    ]
+    "tags": ["Quiet Spots"]
   },
   {
     "name": "Taylor Street Building",
@@ -690,27 +498,14 @@
     ],
     "lat": 41.868864755555556,
     "lon": -87.65493707777779,
-    "tags": [
-      "Quiet Spots",
-      "Professors' Offices"
-    ]
+    "tags": ["Quiet Spots", "Professors' Offices"]
   },
   {
     "name": "1253 South Halsted",
-    "aliases": [
-      "1sh",
-      "1253",
-      "south",
-      "1253 south halsted",
-      "halsted"
-    ],
+    "aliases": ["1sh", "1253", "south", "1253 south halsted", "halsted"],
     "lat": 41.86559867272728,
     "lon": -87.6466459909091,
-    "tags": [
-      "Bathroom",
-      "Lounges",
-      "Quiet Spots"
-    ]
+    "tags": ["Bathroom", "Lounges", "Quiet Spots"]
   },
   {
     "name": "UIC Flames Athletic Center",
@@ -724,11 +519,7 @@
     ],
     "lat": 41.86665631363636,
     "lon": -87.64834109090908,
-    "tags": [
-      "Bathroom",
-      "Lounges",
-      "Loud Spots"
-    ]
+    "tags": ["Bathroom", "Lounges", "Loud Spots"]
   },
   {
     "name": "UIC Co-Generation Facility",
@@ -741,26 +532,14 @@
     ],
     "lat": 41.867373828571424,
     "lon": -87.6524431142857,
-    "tags": [
-      "Quiet Spots"
-    ]
+    "tags": ["Quiet Spots"]
   },
   {
     "name": "UIC Police Department",
-    "aliases": [
-      "uic police department",
-      "upd",
-      "uic",
-      "police",
-      "department"
-    ],
+    "aliases": ["uic police department", "upd", "uic", "police", "department"],
     "lat": 41.86443022222222,
     "lon": -87.65066223333334,
-    "tags": [
-      "Bathroom",
-      "Lounges",
-      "Quiet Spots"
-    ]
+    "tags": ["Bathroom", "Lounges", "Quiet Spots"]
   },
   {
     "name": "South Campus Operations Building",
@@ -774,9 +553,7 @@
     ],
     "lat": 41.864539560000004,
     "lon": -87.64962246,
-    "tags": [
-      "Quiet Spots"
-    ]
+    "tags": ["Quiet Spots"]
   },
   {
     "name": "UIC Transportation Facility",
@@ -789,9 +566,7 @@
     ],
     "lat": 41.864113,
     "lon": -87.65066480000002,
-    "tags": [
-      "Quiet Spots"
-    ]
+    "tags": ["Quiet Spots"]
   },
   {
     "name": "UIC Academic and Residential Complex (ARC)",
@@ -807,12 +582,7 @@
     ],
     "lat": 41.874780176470594,
     "lon": -87.65086582352943,
-    "tags": [
-      "Bathroom",
-      "Study Spots",
-      "Lounges",
-      "Quiet Spots"
-    ]
+    "tags": ["Bathroom", "Study Spots", "Lounges", "Quiet Spots"]
   },
   {
     "name": "Engineering Innovation Building",

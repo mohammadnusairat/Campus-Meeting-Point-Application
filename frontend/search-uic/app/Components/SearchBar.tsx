@@ -24,6 +24,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
 }) => {
   const [query, setQuery] = useState(""); // Track input value
   const [queryResults, setQueryResults] = useState<SearchResult[]>([]); // Store API results
+  const filters = ["Professors' Offices"];
 
   const fetchInputQuery = async (searchTerm: string) => {
     if (!searchTerm) {
@@ -32,8 +33,17 @@ const SearchBar: React.FC<SearchBarProps> = ({
     }
 
     try {
+      // Join the filters array into a comma-separated string
+      let filtersParam = "";
+      if (filters.length === 0) {
+        filtersParam = "";
+      } else {
+        filtersParam = filters.map(encodeURIComponent).join(",");
+      }
       const response = await fetch(
-        `http://127.0.0.1:5000/autocomplete?q=${searchTerm}`
+        `http://127.0.0.1:5000/autocomplete?prefix=${encodeURIComponent(
+          searchTerm
+        )}&filters=${filtersParam}`
       );
       const data: SearchResult[] = await response.json();
       setQueryResults(data);

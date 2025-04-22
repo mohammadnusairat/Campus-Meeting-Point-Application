@@ -49,17 +49,16 @@ class Trie:
         results = []
         # if node is a word that does not exist in seen, 
         # and if it has the right tags (either all or None), add it to results
-        if (node.isWord and node.original_name not in seen
-            and 
-            filters is None or all(tag in node.tags for tag in filters)):
-            results.append({
-                "name": node.original_name,  
-                "tags": node.tags,
-                "aliases": node.aliases,
-                "lat": node.lat,  
-                "lon": node.lon   
-            })
-            seen.add(node.original_name)  
+        if (node.isWord and node.original_name not in seen):
+            if (filters is None or all(tag in node.tags for tag in filters)):
+                results.append({
+                    "name": node.original_name,  
+                    "tags": node.tags,
+                    "aliases": node.aliases,
+                    "lat": node.lat,  
+                    "lon": node.lon   
+                })
+                seen.add(node.original_name)  
         
         # check words in children nodes
         for child in node.children.values():
@@ -108,7 +107,7 @@ if __name__ == "__main__":
         )
 
     # Test autocomplete
-    prefix = "B"  
+    prefix = "behav"  
     filters = []
     results = trie.search(prefix, filters)
     for result in results:

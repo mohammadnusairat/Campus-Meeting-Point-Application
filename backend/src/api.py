@@ -14,10 +14,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 app = Flask(__name__)
 CORS(app)
 
-json_file = "/home/itorres2/CS/351/fgp-hoover10/backend/data/buildings.json"
-
 # global trie for lookup
-autocomplete_trie = trie.build_trie_from_buildings(json_file)
+autocomplete_trie = trie.build_trie_from_buildings("/home/itorres2/CS/351/fgp-hoover10/backend/data/buildings.json")
 
 # Global graph instance
 G = Graph()
@@ -291,10 +289,17 @@ def compute_meeting_by_buildings():
 
 @app.route("/autocomplete")
 def autocomplete():
-    query = request.args.get("q", "").strip().lower()
-    if not query:
+    prefix = request.args.get("prefix", "").strip().lower()
+    filters = request.args.get("filters", "")
+    # Split the comma-separated filters into a list
+    filters_list = filters.split(",") if filters else []
+    print(f"Prefix: {prefix}")
+    print(f"Filters: {filters_list}")
+    # Check if prefix is not empty
+    if not prefix:
         return jsonify([])
-    return jsonify(autocomplete_trie.search(query))
+    
+    return jsonify(autocomplete_trie.search(prefix, filters_list))
 
 @app.route("/building_info")
 def building_info():
