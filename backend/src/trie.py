@@ -102,9 +102,7 @@ if __name__ == "__main__":
     ####    ####    ####    ####    ####
 
     # Build the trie
-    trie = build_trie_from_buildings(
-        "/home/itorres2/CS/351/fgp-hoover10/backend/data/buildings.json"
-        )
+    trie = build_trie_from_buildings("../data/buildings.json")
 
     # Test autocomplete
     prefix = "behav"  
