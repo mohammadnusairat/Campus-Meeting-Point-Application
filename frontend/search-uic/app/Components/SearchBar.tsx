@@ -22,7 +22,8 @@ const SearchBar: React.FC<SearchBarProps> = ({
   setFilteredLocations,
 }) => {
   const [query, setQuery] = useState(""); // Track input value
-  const [queryResults, setQueryResults] = useState<string[]>([]); // Store API results
+  const [queryResults, setQueryResults] = useState<SearchResult[]>([]); // Store API results
+  const filters = ["Professors' Offices"];
 
   const fetchInputQuery = async (searchTerm: string) => {
     if (!searchTerm) {
@@ -49,7 +50,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
       const response = await fetch(
         `http://127.0.0.1:5000/autocomplete?prefix=${searchTerm}&filters=${filtersParam}`
       );
-      const data = await response.json();
+      const data: SearchResult[] = await response.json();
       setQueryResults(data);
     } catch (error) {
       console.error("Error fetching search results:", error);
