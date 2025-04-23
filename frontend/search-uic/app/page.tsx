@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useReducer, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   AdvancedMarker,
   APIProvider,
@@ -9,36 +9,29 @@ import {
   MapControl,
   Pin,
 } from "@vis.gl/react-google-maps";
-// import { configDotenv } from "dotenv";
 
 import SearchBar from "./Components/SearchBar";
-// import EtaDirectionsInfo from "./Components/EtaDirectionsInfo";
 import Title from "./Components/Title";
 import ShareButton from "./Components/ShareButton";
 import Filter from "./Components/Filter";
 
 import "@/app/Styles/Page.css";
 import ClosestSpotFinder from "./Components/ClosestSpotFinder";
-import { setDefaultAutoSelectFamily } from "net";
-import { Interface } from "readline";
 
 // configDotenv({ path: "./.env" }); // Unecessary in Nextjs. Nextjs loads the .env file itself.
 
-interface DestinationData {
-  aliases: string[];
-  lat: Number;
-  lon: Number;
+interface SearchResult {
   name: string;
   tags: string[];
+  aliases: string[];
+  lat: number;
+  lon: number;
 }
 
-// aliases, lat, lon, name, tags}
 export default function Home() {
-  const [destination, setDestination] = useState({});
-  const [destinations, setDestinations] = useState([]);
+  const [destinations, setDestinations] = useState<SearchResult[]>([]);
   const [selectedPin, setSelectedPin] = useState("");
   const [isClient, setIsClient] = useState(false);
-  const [searchBarFilters, setSearchBarFilters] = useState([]);
 
   const [filteredLocations, setFilteredLocations] = useState([
     false,
@@ -70,22 +63,6 @@ export default function Home() {
     throw new Error("Google Maps Map ID is missing");
   }
 
-  const clearDestinations = () => {
-    if (destinations.length > 0) {
-      setDestination({});
-    } else if (destination) {
-      setDestinations([]);
-    }
-  };
-
-  useEffect(() => {
-    const delay = setTimeout(() => {
-      clearDestinations();
-    }, 300);
-
-    return clearTimeout(delay);
-  }, [destination, destinations]);
-
   // Ensures that the map is running in the client since the map's
   // components tries to access document elements
   useEffect(() => {
@@ -106,7 +83,8 @@ export default function Home() {
                     <SearchBar
                       placeholder="Enter Building Name"
                       setSelectedPin={setSelectedPin}
-                      setDestinations={setDestinations}
+                      queryResults={destinations}
+                      setQueryResults={setDestinations}
                       filters={filters}
                       filteredLocations={filteredLocations}
                       setFilteredLocations={setFilteredLocations}
@@ -115,11 +93,12 @@ export default function Home() {
                   </div>
                   <div className="eta-filter">
                     {/* Note: Need to add a closestSpot useState value and use it inside of <Map> so that the pin pops up*/}
-                    <ClosestSpotFinder />
+                    <ClosestSpotFinder
+                      spots={destinations}
+                      setSpots={setDestinations}
+                    />
                     <Filter
                       filters={filters}
-                      // searchBarFilters={searchBarFilters}
-                      // setSearchBarFilters={setSearchBarFilters}
                       filteredLocations={filteredLocations}
                       setFilteredLocations={setFilteredLocations}
                       setDestinations={setDestinations}
@@ -137,33 +116,9 @@ export default function Home() {
                 disableDefaultUI={true}
                 mapId={map_id}
               >
-                {/* Note: Red errors are normal since it doesn't know what object destination(s) is/are */}
-                {/* A single destination */}
-                {/* {destination.lat && destination.lon && (
-                  <AdvancedMarker
-                    onClick={() => {
-                      setSelectedPin(destination.name);
-                    }}
-                    key={destination.name}
-                    title={destination.name}
-                    position={{
-                      lat: Number(destination.lat),
-                      lng: Number(destination.lon),
-                    }}
-                  >
-                    <Pin
-                      background={
-                        selectedPin == destination.name ? "#19dd51" : "#19aadd"
-                      } // Blue (search): #19aadd
-                      glyphColor={"#000"}
-                      borderColor={"#000"}
-                      scale={1.5}
-                    />
-                  </AdvancedMarker>
-                )} */}
-                {/* Many destinations */}
+                {/* Placing multiple destination pins */}
                 {destinations &&
-                  destinations.map((item: DestinationData, index) => (
+                  destinations.map((item: SearchResult, index) => (
                     <AdvancedMarker
                       onClick={() => {
                         setSelectedPin(item.name);
@@ -176,9 +131,11 @@ export default function Home() {
                       }}
                     >
                       <Pin
+                        // Yellow (unselected): #FBBC04
+                        // Green (selected): #19dd51
                         background={
                           selectedPin == item.name ? "#19dd51" : "#FBBC04"
-                        } // Yellow (filters): #FBBC04
+                        }
                         glyphColor={"#000"}
                         borderColor={"#000"}
                         scale={1.5}

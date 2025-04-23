@@ -15,7 +15,8 @@ interface SearchResult {
 interface SearchBarProps {
   placeholder: string;
   setSelectedPin: Dispatch<SetStateAction<string>>;
-  setDestinations: Dispatch<SetStateAction<never[]>>;
+  queryResults: SearchResult[];
+  setQueryResults: React.Dispatch<React.SetStateAction<SearchResult[]>>;
   filters: string[];
   filteredLocations: boolean[];
   setFilteredLocations: Dispatch<SetStateAction<boolean[]>>;
@@ -24,21 +25,20 @@ interface SearchBarProps {
 const SearchBar: React.FC<SearchBarProps> = ({
   placeholder,
   setSelectedPin,
-  setDestinations,
+  queryResults,
+  setQueryResults,
   filters,
   filteredLocations,
-  setFilteredLocations,
 }) => {
   const [query, setQuery] = useState(""); // Track input value
-  const [queryResults, setQueryResults] = useState<SearchResult[]>([]); // Store API results
-  // const filters = ["Professors' Offices"];
 
   const fetchInputQuery = async (searchTerm: string) => {
-    if (!searchTerm) {
+    const filterFlags = filteredLocations.filter((item) => item === true);
+    if (!searchTerm && filterFlags.length == 0) {
       setQueryResults([]);
       return;
     }
-    // console.log(filteredLocations);
+
     // Updating the list of filters requested
     const updatedFilters = [];
     for (let i = 0; i < filters.length; i++) {
@@ -60,32 +60,11 @@ const SearchBar: React.FC<SearchBarProps> = ({
         `http://127.0.0.1:5000/autocomplete?prefix=${searchTerm}&filters=${filtersParam}`
       );
       const data: [] = await response.json();
-      console.log("fetchInputQuery");
-      console.log(data);
-      // setDestination(data);
-      setDestinations(data);
       setQueryResults(data);
     } catch (error) {
       console.error("Error fetching search results:", error);
     }
   };
-
-  // const fetchDestinationInfo = async (searchTerm: string) => {
-  //   if (!searchTerm) {
-  //     return;
-  //   }
-
-  //   try {
-  //     const response = await fetch(
-  //       `http://127.0.0.1:5000/building_info?name=${searchTerm}`
-  //     );
-  //     const data = await response.json();
-  //     console.log(data);
-  //     setDestination(data);
-  //   } catch (error) {
-  //     console.error("Error fetching queried destination info:", error);
-  //   }
-  // };
 
   useEffect(() => {
     const delay = setTimeout(() => {
@@ -93,7 +72,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
     }, 300);
 
     return () => clearTimeout(delay);
-  }, [query]);
+  }, [query, filteredLocations]);
 
   return (
     <div className="search">
@@ -101,10 +80,6 @@ const SearchBar: React.FC<SearchBarProps> = ({
         <Search size={20} />
       </div>
       <div className="search-inputs">
-        {/* If the search bar query is empty and the user clicks on a filter, then display all of the buildings that are associated with that filter. */}
-        {/* Suppose you want a building that starts with the letter s, but want the bathroom of a building that has the letter s
-        If you then click on one of the filters, the buildings displayed by the filters will be buildings with the letter s and that contain a bathroom.
-      */}
         <input
           type="text"
           placeholder={placeholder}
@@ -120,8 +95,6 @@ const SearchBar: React.FC<SearchBarProps> = ({
               onClick={() => {
                 setSelectedPin(location.name);
                 setQuery(location.name); // Optional: fill input with selected value
-                // fetchDestinationInfo(location);
-                // fetchInputQuery(location); // test
                 setQueryResults([]); // Optional: close dropdown
               }}
             >

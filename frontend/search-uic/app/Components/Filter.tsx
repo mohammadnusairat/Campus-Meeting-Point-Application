@@ -1,41 +1,28 @@
 import { MapPinned } from "lucide-react";
 import "@/app/Styles/Filter.css";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
+
+interface SearchResult {
+  name: string;
+  tags: string[];
+  aliases: string[];
+  lat: number;
+  lon: number;
+}
 
 interface FilterProps {
-  setDestinations: Dispatch<SetStateAction<never[]>>;
+  setDestinations: Dispatch<SetStateAction<SearchResult[]>>;
   filteredLocations: boolean[];
   setFilteredLocations: Dispatch<SetStateAction<boolean[]>>;
   filters: string[];
 }
 
 export default function Filter({
-  setDestinations,
   setFilteredLocations,
   filteredLocations,
   filters,
 }: FilterProps) {
-  // const checkedFilters = [false, false, false, false, false, false, false];
-
-  // const fetchFilter = async (filteredItem: string) => {
-  //   if (!filteredItem) {
-  //     setDestinations([]);
-  //     return;
-  //   }
-
-  //   try {
-  //     const response = await fetch(
-  //       `http://127.0.0.1:5000/buildings_by_filter?type=${filteredItem}`
-  //     );
-  //     const data = await response.json();
-  //     console.log(data); // Check the structure in the console
-
-  //     setDestinations(data); // Since data is an array, results can be set directly
-  //   } catch (error) {
-  //     console.error("Error fetching filter results:", error);
-  //   }
-  // };
-
+  useEffect(() => {}, [filteredLocations]);
   return (
     <>
       <div className="filter">
@@ -53,17 +40,11 @@ export default function Filter({
                   id={item}
                   name="filtered_buildings"
                   onClick={() => {
-                    // fetchFilter(item);
-                    const updatedFilters = filteredLocations.map((loc, ind) => {
-                      if (index == ind) {
-                        return !loc;
-                      } else {
-                        return loc;
-                      }
-                    });
-                    console.log(`Old Filters: ${filteredLocations}`);
-                    console.log(`Updated Filters: ${updatedFilters}`);
-                    setFilteredLocations(updatedFilters);
+                    setFilteredLocations((filteredLocations) =>
+                      filteredLocations.map((loc, ind) =>
+                        index === ind ? !loc : loc
+                      )
+                    );
                   }}
                 />
                 {item}
