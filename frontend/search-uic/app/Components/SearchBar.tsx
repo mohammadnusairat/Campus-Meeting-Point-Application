@@ -33,8 +33,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   const [query, setQuery] = useState(""); // Track input value
 
   const fetchInputQuery = async (searchTerm: string) => {
-    const filterFlags = filteredLocations.filter((item) => item === true);
-    if (!searchTerm && filterFlags.length == 0) {
+    if (!searchTerm) {
       setQueryResults([]);
       return;
     }

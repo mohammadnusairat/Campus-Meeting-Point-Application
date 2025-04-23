@@ -29,14 +29,11 @@ export default function ClosestSpotFinder({ spots }: ClosestSpotFinderProps) {
 
   const submitLocation = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Running submitLocation");
     let updatedLocations = locations;
     updatedLocations.push({ from, to });
     setLocations(updatedLocations);
 
-    // renderLocations();
     setShowLocationForm(false);
-    console.log(locations);
     // Make a request to the backend to get the new spots given the locations
 
     // Receive the request
@@ -51,46 +48,10 @@ export default function ClosestSpotFinder({ spots }: ClosestSpotFinderProps) {
 
   const removeLocation = (e: React.FormEvent, loc: SpotFinder) => {
     e.preventDefault();
-    console.log("Running removeLocation");
     setLocations((locations) =>
       locations.filter((item) => item.from !== loc.from || item.to !== loc.to)
     );
-    // setLocations((updatedLocations) =>
-    //   updatedLocations.filter(
-    //     (item) => item.from !== loc.from && item.to !== loc.to
-    //     // (item) => item !== loc
-    //   )
-    // );
-    // setLocations(updatedLocations);
-    // renderLocations();
-    console.log(locations);
   };
-
-  // const renderLocations = () => {
-  //   console.log("Running renderLocations");
-  //   // setRenderedLocations(
-  //   // locations.map((loc: SpotFinder, index) => {
-  //   //   return (
-  //   //     <form key={index} onSubmit={(e) => removeLocation(e, loc)}>
-  //   //       <div>{index + 1}</div>
-  //   //       <div>From: {loc.from}</div>
-  //   //       <div>To: {loc.to}</div>
-  //   //       <button>Remove</button>
-  //   //     </form>
-  //   //   );
-  //   // })
-  //   // );
-
-  //   console.log(locations);
-  // };
-
-  // useEffect(() => {
-  //   const delay = setTimeout(() => {
-  //     setRenderedLocations(renderLocations());
-  //   }, 300);
-
-  //   return () => clearTimeout(delay);
-  // }, [locations]);
 
   return (
     <>
