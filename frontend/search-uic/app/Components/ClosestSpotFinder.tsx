@@ -18,10 +18,16 @@ interface ClosestSpotFinderProps {
   spots: SearchResult[];
   setSpots: React.Dispatch<React.SetStateAction<SearchResult[]>>;
   filters: string[];
-  setMeetingPoint: React.Dispatch<React.SetStateAction<{ lat: number; lon: number } | null>>;
+  setMeetingPoint: React.Dispatch<
+    React.SetStateAction<{ lat: number; lon: number } | null>
+  >;
 }
 
-export default function ClosestSpotFinder({ spots, setSpots, filters }: ClosestSpotFinderProps) {
+export default function ClosestSpotFinder({
+  spots,
+  setSpots,
+  filters,
+}: ClosestSpotFinderProps) {
   const [locations, setLocations] = useState<SpotFinder[]>([]);
   const [from, setFrom] = useState("");
   const [showLocationForm, setShowLocationForm] = useState(true);
@@ -30,43 +36,47 @@ export default function ClosestSpotFinder({ spots, setSpots, filters }: ClosestS
 
   useEffect(() => {
     fetch("http://localhost:5000/buildings_by_filter?type=") // empty type = get all
-      .then((res) => res.json())     
+      .then((res) => res.json())
       .catch((err) => {
         console.error("Error loading all buildings:", err);
       });
   }, []);
-
 
   const fetchMeetingPoint = async () => {
     if (locations.length < 2) {
       alert("Please enter at least two location pairs.");
       return;
     }
-  
+
     const buildingNames = locations.map((loc) => loc.from.toLowerCase());
     setIsLoading(true); // START LOADING
-  
+
     try {
-      const res = await fetch("http://localhost:5000/compute_meeting_by_buildings_with_filters", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ buildings: buildingNames, filters }),
-      });
-  
+      const res = await fetch(
+        "http://localhost:5000/compute_meeting_by_buildings_with_filters",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ buildings: buildingNames, filters }),
+        }
+      );
+
       const data = await res.json();
       console.log("Backend response:", data); // NEW LOG
       if (res.ok) {
         console.log("Filtered Meeting Point:", data);
         alert(`Meeting Point: ${data.meeting_building}`);
         setGoogleMapsLink(
-          `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(data.meeting_building)}`
+          `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+            data.meeting_building
+          )}`
         );
-  
+
         // Remove old "meeting" markers
         setSpots((prev: SearchResult[]) =>
           prev.filter((b) => !b.tags.includes("meeting"))
         );
-  
+
         // Add new meeting point to map
         const buildingToAdd: SearchResult = {
           name: data.meeting_building,
@@ -83,9 +93,9 @@ export default function ClosestSpotFinder({ spots, setSpots, filters }: ClosestS
       console.error("Error fetching meeting point:", err);
       alert("Server error.");
     }
-  
+
     setIsLoading(false); // STOP LOADING
-  };        
+  };
 
   const submitLocation = (e: React.FormEvent) => {
     e.preventDefault();
@@ -121,39 +131,46 @@ export default function ClosestSpotFinder({ spots, setSpots, filters }: ClosestS
         </div>
         {/* Closest Spot Finder */}
         <div>
-          {locations.length > 0 ? (
-            locations.map((loc: SpotFinder, index) => {
-              return (
-                <form key={index} onSubmit={(e) => removeLocation(e, loc)}>
-                  <div>{index + 1}</div>
-                  <div>From: {loc.from}</div>
-                  <button>Remove</button>
-                </form>
-              );
-            })
-          ) : (
-            <div></div>
-          )}
-          {/* Option to Show form */}
-          {showLocationForm ? (
-            <form onSubmit={(e) => submitLocation(e)}>
-              <div>
-                <div>{locations.length + 1}</div>
-                <div>
-                  From:{" "}
-                  <input
-                    type="text"
-                    value={from}
-                    onChange={(e) => setFrom(e.target.value)}
-                  />
+          <div className="location-list">
+            {locations.length > 0 ? (
+              locations.map((loc: SpotFinder, index) => (
+                <div key={index} className="location-item">
+                  <div className="location-text">
+                    <span>
+                      {index + 1}. From: {loc.from}
+                    </span>
+                  </div>
+                  <button
+                    className="remove-button"
+                    onClick={(e) => removeLocation(e, loc)}
+                  >
+                    Remove
+                  </button>
                 </div>
-              </div>
-              <button>
+              ))
+            ) : (
+              <p style={{ color: "white", textAlign: "center" }}>
+                No locations added yet.
+              </p>
+            )}
+          </div>
+          {/* Option to Show form */}
+          {showLocationForm && (
+            <form
+              className="add-location-form"
+              onSubmit={(e) => submitLocation(e)}
+            >
+              <label htmlFor="from">Add Location:</label>
+              <input
+                id="from"
+                type="text"
+                value={from}
+                onChange={(e) => setFrom(e.target.value)}
+              />
+              <button type="submit">
                 <Check />
               </button>
             </form>
-          ) : (
-            <div></div>
           )}
           {/* Add a new from and to location */}
           <div>
@@ -165,10 +182,21 @@ export default function ClosestSpotFinder({ spots, setSpots, filters }: ClosestS
         <button className="filter-submit-button" onClick={fetchMeetingPoint}>
           Compute Filtered Meeting Point
         </button>
-        {isLoading && <p style={{ color: "white", marginTop: "0.5rem" }}>Calculating meeting point...</p>}
+        {isLoading && (
+          <p style={{ color: "white", marginTop: "0.5rem" }}>
+            Calculating meeting point...
+          </p>
+        )}
       </div>
       {googleMapsLink && (
-        <div style={{ position: "absolute", top: "10px", right: "10px", zIndex: 999 }}>
+        <div
+          style={{
+            position: "absolute",
+            top: "10px",
+            right: "10px",
+            zIndex: 999,
+          }}
+        >
           <a
             href={googleMapsLink}
             target="_blank"
