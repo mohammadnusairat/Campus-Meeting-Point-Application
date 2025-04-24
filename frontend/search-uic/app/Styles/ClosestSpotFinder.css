@@ -9,6 +9,7 @@
   justify-content: center;
   margin-top: 1%;
   margin-left: 1%;
+  position: relative;
 }
 
 .map-pin-check-icon-placement {
@@ -22,4 +23,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.filter-submit-button {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #0070f3;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.filter-submit-button:hover {
+  background-color: #005ecb;
 }

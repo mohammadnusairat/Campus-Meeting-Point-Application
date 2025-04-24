@@ -315,7 +315,7 @@ def compute_meeting_by_buildings_with_filters():
     candidates = []
     for b in buildings:
         tags = [t.lower() for t in b.get("tags", [])]
-        if required_tags.issubset(tags):
+        if required_tags.intersection(tags):
             dist = geodesic((fermat_lat, fermat_lon), (b["lat"], b["lon"])).meters
             candidates.append((dist, b))
 
@@ -387,7 +387,8 @@ def building_info():
 def buildings_by_filter():
     tag = request.args.get("type", "").strip().lower()
     if not tag:
-        return jsonify({"error": "Missing filter type"}), 400
+        # No filter specified; return all buildings
+        return jsonify(load_buildings())
 
     buildings = load_buildings()
     filtered = []

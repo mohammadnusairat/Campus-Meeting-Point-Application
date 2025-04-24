@@ -31,6 +31,20 @@ interface SearchResult {
 export default function Home() {
   const [destinations, setDestinations] = useState<SearchResult[]>([]);
   const [selectedPin, setSelectedPin] = useState("");
+  const [meetingPoint, setMeetingPoint] = useState<{ lat: number; lon: number } | null>(null);
+  useEffect(() => {
+    if (!meetingPoint) return;
+  
+    const match = destinations.find(
+      (d) =>
+        Math.abs(d.lat - meetingPoint.lat) < 0.0002 &&
+        Math.abs(d.lon - meetingPoint.lon) < 0.0002
+    );
+  
+    if (match) {
+      setSelectedPin(match.name);
+    }
+  }, [meetingPoint, destinations]);  
   const [isClient, setIsClient] = useState(false);
 
   const [filteredLocations, setFilteredLocations] = useState([
@@ -96,6 +110,8 @@ export default function Home() {
                     <ClosestSpotFinder
                       spots={destinations}
                       setSpots={setDestinations}
+                      filters={filters}
+                      setMeetingPoint={setMeetingPoint}
                     />
                     <Filter
                       filters={filters}
@@ -116,9 +132,23 @@ export default function Home() {
                 disableDefaultUI={true}
                 mapId={map_id}
               >
-                {/* Placing multiple destination pins */}
+                {/* Yellow meeting pin goes here */}
+                {meetingPoint && (
+                  <AdvancedMarker
+                    title="Meeting Point"
+                    position={{ lat: meetingPoint.lat, lng: meetingPoint.lon }}
+                  >
+                    <Pin
+                      background="#facc15" // Yellow
+                      borderColor="#000"
+                      glyphColor="#000"
+                      scale={2}
+                    />
+                  </AdvancedMarker>
+                )}
+                {/* Existing loop for user building pins */}
                 {destinations &&
-                  destinations.map((item: SearchResult, index) => (
+                  destinations.map((item: SearchResult, index) => (                   
                     <AdvancedMarker
                       onClick={() => {
                         setSelectedPin(item.name);
