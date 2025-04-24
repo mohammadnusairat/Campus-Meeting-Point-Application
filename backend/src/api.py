@@ -10,12 +10,13 @@ from flask_cors import CORS
 import trie
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BUILDINGS_FILE = os.path.join(BASE_DIR, "data", "buildings.json")
 
 app = Flask(__name__)
 CORS(app)
 
 # global trie for lookup
-autocomplete_trie = trie.build_trie_from_buildings("../data/buildings.json")
+autocomplete_trie = trie.build_trie_from_buildings(BUILDINGS_FILE)
 
 # Global graph instance
 G = Graph()
@@ -211,37 +212,39 @@ def get_edges():
     return jsonify({"edges": edges})
 
 # Not accepting lat/lon input from user
-# @app.route("/compute_meeting", methods=["POST"])
-# def compute_meeting():
-#     """
-#     Compute the best meeting point and paths for three people.
-#     Expects a JSON payload with 'locations': [(lat1, lon1), (lat2, lon2), (lat3, lon3)]
-#     """
-#     data = request.json
-#     people_locations = data.get("locations")
+"""
+@app.route("/compute_meeting", methods=["POST"])
+def compute_meeting():
+    # Compute the best meeting point and paths for three people.
+    # Expects a JSON payload with 'locations': [(lat1, lon1), (lat2, lon2), (lat3, lon3)]
+    data = request.json
+    people_locations = data.get("locations")
 
-#     if not people_locations or len(people_locations) != 3:
-#         return jsonify({"error": "Please provide exactly 3 locations"}), 400
+    if not people_locations or len(people_locations) != 3:
+        return jsonify({"error": "Please provide exactly 3 locations"}), 400
 
-#     # Step 1: Compute Geodesic Fermat Point
-#     fermat_lat, fermat_lon = geodesic_fermat_point(people_locations)
+    # Step 1: Compute Geodesic Fermat Point
+    fermat_lat, fermat_lon = geodesic_fermat_point(people_locations)
 
-#     # Step 2: Find the nearest graph node
-#     meeting_node = find_nearest_node(G, fermat_lat, fermat_lon, Nodes)
+    # Step 2: Find the nearest graph node
+    meeting_node = find_nearest_node(G, fermat_lat, fermat_lon, Nodes)
 
-#     # Step 3: Compute shortest paths to meeting node
-#     paths = []
-#     for person_location in people_locations:
-#         start_node = find_nearest_node(G, person_location[0], person_location[1], Nodes)
-#         path = dijkstra(G, start_node, meeting_node)
-#         paths.append(path)
+    # Step 3: Compute shortest paths to meeting node
+    paths = []
+    for person_location in people_locations:
+        start_node = find_nearest_node(G, person_location[0], person_location[1], Nodes)
+        path = dijkstra(G, start_node, meeting_node)
+        paths.append(path)
 
-#     return jsonify({
-#         "fermat_point": {"lat": fermat_lat, "lon": fermat_lon},
-#         "meeting_node": meeting_node,
-#         "paths": paths
-#     })
+    return jsonify({
+        "fermat_point": {"lat": fermat_lat, "lon": fermat_lon},
+        "meeting_node": meeting_node,
+        "paths": paths
+    })
+"""
 
+# Compute meeting (without filters)
+"""
 @app.route("/compute_meeting_by_buildings", methods=["POST"])
 def compute_meeting_by_buildings():
     data = request.json
@@ -285,6 +288,63 @@ def compute_meeting_by_buildings():
         "distances_meters": path_distances,
         "etas_minutes": etas,
         "summaries": summaries
+    })
+"""
+
+@app.route("/compute_meeting_by_buildings_with_filters", methods=["POST"])
+def compute_meeting_by_buildings_with_filters():
+    data = request.json
+    building_names = data.get("buildings", [])
+    required_tags = set(tag.lower() for tag in data.get("filters", []))
+
+    if not building_names or not isinstance(building_names, list) or len(building_names) < 2:
+        return jsonify({"error": "Please provide at least two building names"}), 400
+
+    buildings = load_buildings()
+    locations = []
+
+    for name in building_names:
+        coords = get_building_coordinates(name, buildings)
+        if coords is None:
+            return jsonify({"error": f"Building '{name}' not found"}), 404
+        locations.append(coords)
+
+    fermat_lat, fermat_lon = geodesic_fermat_point(locations)
+
+    # Step 1: Filter buildings by required tags
+    candidates = []
+    for b in buildings:
+        tags = [t.lower() for t in b.get("tags", [])]
+        if required_tags.issubset(tags):
+            dist = geodesic((fermat_lat, fermat_lon), (b["lat"], b["lon"])).meters
+            candidates.append((dist, b))
+
+    if not candidates:
+        return jsonify({"error": "No buildings match the selected filters."}), 404
+
+    # Step 2: Find the building closest to the Fermat point among matches
+    _, best_building = min(candidates, key=lambda x: x[0])
+    meeting_coords = (best_building["lat"], best_building["lon"])
+    meeting_node = find_nearest_node(G, *meeting_coords, Nodes)
+
+    start_nodes = [find_nearest_node(G, lat, lon, Nodes) for lat, lon in locations]
+    paths = [dijkstra(G, start, meeting_node) for start in start_nodes]
+    path_distances = [calculate_path_distance(p, Nodes) for p in paths]
+    etas = [estimate_walk_time_mins(d) for d in path_distances]
+    summaries = [
+        f"You will walk ~{eta} minutes ({round(dist)} meters)."
+        for eta, dist in zip(etas, path_distances)
+    ]
+
+    return jsonify({
+        "fermat_point": {"lat": fermat_lat, "lon": fermat_lon},
+        "meeting_building": best_building["name"],
+        "meeting_node": meeting_node,
+        "paths": paths,
+        "distances_meters": path_distances,
+        "etas_minutes": etas,
+        "summaries": summaries,
+        "filters_applied": list(required_tags)
     })
 
 @app.route("/autocomplete")
