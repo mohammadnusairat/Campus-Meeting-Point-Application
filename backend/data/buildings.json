@@ -271,7 +271,7 @@
     "aliases": ["cmw", "cwc", "commons west (cmw)", "west", "commons"],
     "lat": 41.87418683084112,
     "lon": -87.64917916448599,
-    "tags": ["Bathroom", "Study Spots", "Lounges", "Quiet Spots"]
+    "tags": ["Bathroom", "Study Spots", "Food Spots", "Lounges", "Quiet Spots"]
   },
   {
     "name": "Addams Hall (AH)",
@@ -305,7 +305,7 @@
     "aliases": ["bh", "bhb", "burnham", "burnham hall (bh)", "hall"],
     "lat": 41.87099858571428,
     "lon": -87.64931629285715,
-    "tags": ["Study Spots", "Quiet Spots", "Lecture Hall"]
+    "tags": ["Bathroom", "Study Spots", "Quiet Spots", "Lecture Hall"]
   },
   {
     "name": "Engineering Research Facility (ERF)",
@@ -319,7 +319,7 @@
     ],
     "lat": 41.8699737923077,
     "lon": -87.64823453076923,
-    "tags": ["Bathroom", "Professors' Offices", "Quiet Spots"]
+    "tags": ["Bathroom", "Study Spots", "Professors' Offices", "Quiet Spots"]
   },
   {
     "name": "Taft Hall (TH)",
