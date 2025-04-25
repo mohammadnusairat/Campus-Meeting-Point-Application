@@ -131,17 +131,15 @@ export default function ClosestSpotFinder({
         </div>
         {/* Closest Spot Finder */}
         <div>
-          <div className="location-list">
+          <div>
             {locations.length > 0 ? (
               locations.map((loc: SpotFinder, index) => (
                 <div key={index} className="location-item">
                   <div className="location-text">
-                    <span>
-                      {index + 1}. From: {loc.from}
-                    </span>
+                    {index + 1}. From: {loc.from}
                   </div>
                   <button
-                    className="remove-button"
+                    className="button remove-button"
                     onClick={(e) => removeLocation(e, loc)}
                   >
                     Remove
@@ -149,39 +147,43 @@ export default function ClosestSpotFinder({
                 </div>
               ))
             ) : (
-              <p style={{ color: "white", textAlign: "center" }}>
-                No locations added yet.
-              </p>
+              <p className="no-locations-text">No locations added yet.</p>
             )}
           </div>
-          {/* Option to Show form */}
+
           {showLocationForm && (
-            <form
-              className="add-location-form"
-              onSubmit={(e) => submitLocation(e)}
-            >
-              <label htmlFor="from">Add Location:</label>
-              <input
-                id="from"
-                type="text"
-                value={from}
-                onChange={(e) => setFrom(e.target.value)}
-              />
-              <button type="submit">
-                <Check />
-              </button>
+            <form onSubmit={(e) => submitLocation(e)} className="input-form">
+              <div className="input-wrapper">
+                <input
+                  type="text"
+                  value={from}
+                  onChange={(e) => setFrom(e.target.value)}
+                  placeholder="Enter location"
+                  className="styled-input"
+                />
+                <button className="button check-button">
+                  <Check />
+                </button>
+              </div>
             </form>
           )}
-          {/* Add a new from and to location */}
+
           <div>
-            <button onClick={() => setShowLocationForm(true)}>
+            <button
+              className="button plus-button"
+              onClick={() => setShowLocationForm(true)}
+            >
               <Plus />
             </button>
           </div>
+
+          <button
+            className="button filter-submit-button"
+            onClick={fetchMeetingPoint}
+          >
+            Compute Filtered Meeting Point
+          </button>
         </div>
-        <button className="filter-submit-button" onClick={fetchMeetingPoint}>
-          Compute Filtered Meeting Point
-        </button>
         {isLoading && (
           <p style={{ color: "white", marginTop: "0.5rem" }}>
             Calculating meeting point...
