@@ -1,15 +1,16 @@
 .closest-spot-finder {
-  width: 468px;
+  width: 320px;
   height: auto;
   border-radius: 11px;
-  background: #c0c0c0; /* gray background */
+  background: #c0c0c0;
   padding: 20px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-top: 1%;
-  margin-left: 1%;
+  align-items: flex-start;
+  justify-content: flex-start;
+  margin-top: 0;
+  margin-left: 0;
+  position: relative; /* needed for positioning copy button */
 }
 
 /* Style for the input form wrapper */
@@ -23,11 +24,13 @@
 /* Style for the input and button container */
 .input-wrapper {
   display: flex;
+  flex-direction: row;
   align-items: center;
+  justify-content: center;
+  width: 100%;
   background: white;
   padding: 5px;
   border-radius: 4px;
-  width: 100%;
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
 }
 
@@ -43,10 +46,10 @@
 
 /* Style for the check button */
 .check-button {
-  background-color: #7a0019; /* Deep burgundy */
+  background-color: #7a0019;
   color: white;
   border: none;
-  border-radius: 0 4px 4px 0; /* Rounded corners on the right */
+  border-radius: 0 4px 4px 0;
   padding: 0.5rem;
   display: flex;
   align-items: center;
@@ -56,26 +59,30 @@
 }
 
 .check-button:hover {
-  background-color: #5a0013; /* Darker burgundy for hover */
+  background-color: #5a0013;
 }
 
+/* CENTERED MAP ICON */
 .map-pin-check-icon-placement {
   width: 40px;
   height: 40px;
-  margin-left: 10px;
+  margin-top: 0;
+  margin-bottom: 10px;
+  margin-left: 120px;
   border-radius: 4px;
-  background: #7a0019; /* deep burgundy */
+  background: #7a0019;
   color: white;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 24px;
+  align-self: flex-start; /* NEW: forces it to stick to left side inside flex column */
 }
 
 /* Shared button styles */
 .button {
   padding: 0.5rem 1rem;
-  background-color: #7a0019; /* Deep burgundy */
+  background-color: #7a0019;
   color: white;
   border: none;
   border-radius: 4px;
@@ -87,11 +94,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto; /* Center the button */
+  margin: 0 auto;
 }
 
 .button:hover {
-  background-color: #5a0013; /* Darker burgundy for hover */
+  background-color: #5a0013;
 }
 
 /* Specific button styles */
@@ -100,12 +107,14 @@
   height: 60px;
   font-size: 32px;
   border: 2px solid white;
+  margin: 10px auto; /* center horizontally */
 }
 
 .filter-submit-button {
-  width: 100%;
+  width: 80%;
   font-size: 16px;
-  margin-top: 10px;
+  margin: 10px auto;
+  display: block; /* center */
 }
 
 .remove-button {
@@ -115,7 +124,7 @@
 
 /* Style for the "No locations added yet" text */
 .no-locations-text {
-  color: #7a0019; /* Burgundy color */
+  color: #7a0019;
   text-align: center;
   font-size: 16px;
   font-weight: bold;
@@ -127,33 +136,23 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #f5f5f5; /* Light gray background */
+  background: #f5f5f5;
   padding: 10px;
   border-radius: 4px;
   margin-bottom: 10px;
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
 }
 
-/* Style for the location text */
 .location-text {
   flex: 1;
   font-size: 14px;
-  color: #333; /* Dark gray text */
+  color: #333;
   margin-right: 10px;
 }
 
-/* Style for the remove button */
-.remove-button {
-  background-color: #7a0019; /* Deep burgundy */
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 0.3rem 0.6rem;
-  font-size: 12px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.remove-button:hover {
-  background-color: #5a0013; /* Darker burgundy for hover */
+.copy-meeting-link-top-right {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1000;
 }

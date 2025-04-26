@@ -28,21 +28,35 @@ export default function ClosestSpotFinder({
   spots,
   setSpots,
   filters,
-  filteredLocations
+  filteredLocations,
+  setMeetingPoint
 }: ClosestSpotFinderProps) {
   const [locations, setLocations] = useState<SpotFinder[]>([]);
   const [from, setFrom] = useState("");
   const [showLocationForm, setShowLocationForm] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [googleMapsLink, setGoogleMapsLink] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
+  const [availableBuildings, setAvailableBuildings] = useState<SearchResult[]>([]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/buildings_by_filter?type=") // empty type = get all
-      .then((res) => res.json())
-      .catch((err) => {
-        console.error("Error loading all buildings:", err);
-      });
-  }, []);
+    fetchAvailableBuildings();
+  }, [filteredLocations]); // refetch when filters change
+
+  const fetchAvailableBuildings = async () => {
+    try {
+      const selectedFilters = filteredLocations.length > 0 && filteredLocations.some(f => f)
+        ? filters.filter((_, idx) => filteredLocations[idx])
+        : [];
+
+      const query = selectedFilters.length > 0 ? `type=${selectedFilters[0]}` : ""; // backend expects single type at a time
+      const res = await fetch(`http://localhost:5000/buildings_by_filter?${query}`);
+      const data = await res.json();
+      setAvailableBuildings(data || []);
+    } catch (err) {
+      console.error("Error fetching available buildings:", err);
+    }
+  };
 
   const fetchMeetingPoint = async () => {
     if (locations.length < 2) {
@@ -52,14 +66,16 @@ export default function ClosestSpotFinder({
 
     const buildingNames = locations.map((loc) => loc.from.toLowerCase());
     const selectedFilters = filteredLocations.length > 0 && filteredLocations.some(f => f)
-  ? filters.filter((_, idx) => filteredLocations[idx])
-  : [...filters]; // copy all filters if none selected
+      ? filters.filter((_, idx) => filteredLocations[idx])
+      : [...filters]; // fallback to all filters
+
     if (!selectedFilters || selectedFilters.length === 0) {
       alert("No filters selected and fallback to all filters failed.");
       setIsLoading(false);
       return;
     }
-    setIsLoading(true); // START LOADING
+
+    setIsLoading(true);
 
     try {
       const res = await fetch(
@@ -77,49 +93,41 @@ export default function ClosestSpotFinder({
         setIsLoading(false);
         return;
       }
-      
+
       const data = await res.json();
-      
-      // Check if critical fields exist
+
       if (!data.meeting_building || !data.fermat_point) {
         alert("No valid meeting point could be found with the selected filters.");
         setIsLoading(false);
         return;
-      }      
-
-      console.log("Backend response:", data); // NEW LOG
-      if (res.ok) {
-        console.log("Filtered Meeting Point:", data);
-        alert(`Meeting Point: ${data.meeting_building}`);
-        setGoogleMapsLink(
-          `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-            data.meeting_building
-          )}`
-        );
-
-        // Remove old "meeting" markers
-        setSpots((prev: SearchResult[]) =>
-          prev.filter((b) => !b.tags.includes("meeting"))
-        );
-
-        // Add new meeting point to map
-        const buildingToAdd: SearchResult = {
-          name: data.meeting_building,
-          lat: data.fermat_point.lat,
-          lon: data.fermat_point.lon,
-          tags: ["meeting"],
-          aliases: [],
-        };
-        setSpots((prev: SearchResult[]) => [...prev, buildingToAdd]);
-      } else {
-        alert(data.error || "No meeting point found.");
       }
+
+      console.log("Backend response:", data);
+      alert(`Meeting Point: ${data.meeting_building}`);
+      setGoogleMapsLink(
+        `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+          data.meeting_building
+        )}`
+      );
+
+      setSpots((prev: SearchResult[]) =>
+        prev.filter((b) => !b.tags.includes("meeting"))
+      );
+
+      const buildingToAdd: SearchResult = {
+        name: data.meeting_building,
+        lat: data.fermat_point.lat,
+        lon: data.fermat_point.lon,
+        tags: ["meeting"],
+        aliases: [],
+      };
+      setSpots((prev: SearchResult[]) => [...prev, buildingToAdd]);
     } catch (err) {
       console.error("Error fetching meeting point:", err);
       alert("Server error.");
     }
 
-    setIsLoading(false); // STOP LOADING
+    setIsLoading(false);
   };
 
   const submitLocation = (e: React.FormEvent) => {
@@ -127,18 +135,6 @@ export default function ClosestSpotFinder({
     setLocations((prev) => [...prev, { from }]);
     setFrom("");
     setShowLocationForm(false);
-    /*
-    // Make a request to the backend to get the new spots given the locations
-
-    // Receive the request
-
-    // Parse the request
-
-    // Replace the spots array with a new array of the new spots
-
-    // fetchInputQuery() in SearchBar.tsx will take care of making another
-    // request through useEffect()
-    */
   };
 
   const removeLocation = (e: React.FormEvent, loc: SpotFinder) => {
@@ -151,10 +147,41 @@ export default function ClosestSpotFinder({
   return (
     <>
       <div className="closest-spot-finder">
+        {/* Copy Meeting Link at Top Right */}
+        {googleMapsLink && (
+          <div className="copy-meeting-link-top-right">
+            <button
+              onClick={async () => {
+                try {
+                  await navigator.clipboard.writeText(googleMapsLink!);
+                  setCopied(true);
+                  setTimeout(() => setCopied(false), 2000);
+                } catch (err) {
+                  console.error("Failed to copy link", err);
+                }
+              }}
+              style={{
+                color: "#facc15",
+                backgroundColor: "#1f2937",
+                padding: "6px 12px",
+                borderRadius: "6px",
+                textDecoration: "none",
+                fontWeight: "bold",
+                border: "none",
+                cursor: "pointer"
+              }}
+            >
+              {copied ? "Link Copied!" : "Copy Meeting Link"}
+            </button>
+          </div>
+        )}
+  
+        {/* Icon */}
         <div className="map-pin-check-icon-placement">
           <MapPinCheck />
         </div>
-        {/* Closest Spot Finder */}
+  
+        {/* Locations Section */}
         <div>
           <div>
             {locations.length > 0 ? (
@@ -175,7 +202,7 @@ export default function ClosestSpotFinder({
               <p className="no-locations-text">No locations added yet.</p>
             )}
           </div>
-
+  
           {showLocationForm && (
             <form onSubmit={(e) => submitLocation(e)} className="input-form">
               <div className="input-wrapper">
@@ -192,7 +219,7 @@ export default function ClosestSpotFinder({
               </div>
             </form>
           )}
-
+  
           <div>
             <button
               className="button plus-button"
@@ -201,46 +228,56 @@ export default function ClosestSpotFinder({
               <Plus />
             </button>
           </div>
-
+  
+          {/* Compute Button */}
           <button
             className="button filter-submit-button"
             onClick={fetchMeetingPoint}
           >
             Compute Filtered Meeting Point
           </button>
+  
+          {/* Loading Text */}
+          {isLoading && (
+            <p style={{ color: "white", marginTop: "0.5rem", fontSize: "14px", textAlign: "center" }}>
+              Calculating meeting point...
+            </p>
+          )}
         </div>
-        {isLoading && (
-          <p style={{ color: "white", marginTop: "0.5rem" }}>
-            Calculating meeting point...
-          </p>
-        )}
-      </div>
-      {googleMapsLink && (
-        <div
-          style={{
-            position: "absolute",
-            top: "10px",
-            right: "10px",
-            zIndex: 999,
-          }}
-        >
-          <a
-            href={googleMapsLink}
-            target="_blank"
-            rel="noopener noreferrer"
+  
+        {/* Available Buildings Section */}
+        <div className="available-buildings-section">
+          <h3 style={{ marginTop: "1rem", color: "white" }}>Available Buildings</h3>
+          <div
             style={{
-              color: "#facc15",
+              maxHeight: "150px",
+              overflowY: "auto",
+              marginTop: "0.5rem",
               backgroundColor: "#1f2937",
-              padding: "6px 12px",
-              borderRadius: "6px",
-              textDecoration: "none",
-              fontWeight: "bold",
+              padding: "0.5rem",
+              borderRadius: "8px",
             }}
           >
-            View Meeting Point on Google Maps
-          </a>
+            {availableBuildings.length > 0 ? (
+              availableBuildings.map((building, index) => (
+                <div
+                  key={index}
+                  style={{
+                    color: "#facc15",
+                    marginBottom: "0.5rem",
+                    padding: "4px 0",  // <-- add padding so each row has more vertical space
+                    fontSize: "14px",  // <-- consistent font size
+                  }}
+                >
+                  {building.name}
+                </div>
+              ))
+            ) : (
+              <p style={{ color: "gray" }}>No buildings match the selected filters.</p>
+            )}
+          </div>
         </div>
-      )}
+      </div>
     </>
-  );
+  );  
 }

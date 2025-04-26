@@ -1,32 +1,52 @@
 .background-map {
   position: absolute;
-  z-index: -1;
-  width: 100.5%;
-  height: 101%;
-  left: -0.5%;
-  top: -1%;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  z-index: 0;
 }
 
 .Home {
-  padding-top: 1%;
-  width: 98vw;
-  height: 100%;
+  width: 100%;
+  height: 100vh;
+  position: relative; /* So children absolute position against this */
+  overflow: hidden;
 }
 
 .title-search-location {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   flex-direction: row;
-  align-items: left;
-  width: 100%;
-  height: 100%;
-  justify-content: space-evenly;
-  padding: 2%;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  z-index: 999;
+  background: rgba(255, 255, 255, 0.8); /* Optional: light background behind title bar */
+  padding: 10px 20px;
+  border-radius: 8px;
 }
 
 .eta-filter {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: space-evenly;
+  margin-left: 30px;
+  margin-top: 150px;
+}
+
+.filters-box {
   position: absolute;
+  top: 160px;
+  right: 30px;
+  z-index: 9999; /* very high */
+  background: rgba(240, 208, 122, 0.95);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.map-container {
+  width: 100%;
+  height: 100%;
 }

@@ -84,29 +84,31 @@ export default function Home() {
   }, []);
 
   return (
-    // Please place data in its appropriate div/component
     <div>
       <header>
         <div className="background-map">
           {isClient && (
             <APIProvider apiKey={maps_api_key}>
-              <MapControl position={ControlPosition.TOP_CENTER}>
-                <div className="Home">
-                  <div className="title-search-location">
-                    <Title />
-                    <SearchBar
-                      placeholder="Enter Building Name"
-                      setSelectedPin={setSelectedPin}
-                      queryResults={destinations}
-                      setQueryResults={setDestinations}
-                      filters={filters}
-                      filteredLocations={filteredLocations}
-                      setFilteredLocations={setFilteredLocations}
-                    />
-                    <ShareButton selectedPin={selectedPin} />
-                  </div>
+              <div className="Home">
+  
+                {/* Top Bar */}
+                <div className="title-search-location">
+                  <Title />
+                  <SearchBar
+                    placeholder="Enter Building Name"
+                    setSelectedPin={setSelectedPin}
+                    queryResults={destinations}
+                    setQueryResults={setDestinations}
+                    filters={filters}
+                    filteredLocations={filteredLocations}
+                    setFilteredLocations={setFilteredLocations}
+                  />
+                  <ShareButton selectedPin={selectedPin} />
+                </div>
+  
+                {/* Map Controls - ClosestSpotFinder (Left) + Filters (Right) */}
+                <MapControl position={ControlPosition.TOP_LEFT}>
                   <div className="eta-filter">
-                    {/* Note: Need to add a closestSpot useState value and use it inside of <Map> so that the pin pops up*/}
                     <ClosestSpotFinder
                       spots={destinations}
                       setSpots={setDestinations}
@@ -114,70 +116,62 @@ export default function Home() {
                       filteredLocations={filteredLocations}
                       setMeetingPoint={setMeetingPoint}
                     />
-                    <Filter
-                      filters={filters}
-                      filteredLocations={filteredLocations}
-                      setFilteredLocations={setFilteredLocations}
-                      setDestinations={setDestinations}
-                    />
                   </div>
+                </MapControl>
+
+                {/* Filters box moved OUTSIDE of MapControl */}
+                <div className="filters-box">
+                  <Filter
+                    filters={filters}
+                    filteredLocations={filteredLocations}
+                    setFilteredLocations={setFilteredLocations}
+                    setDestinations={setDestinations}
+                  />
                 </div>
-              </MapControl>
-              <Map
-                defaultCenter={{
-                  lat: 41.871838324998784,
-                  lng: -87.65107916698115,
-                }}
-                defaultZoom={16}
-                gestureHandling={"greedy"}
-                disableDefaultUI={true}
-                mapId={map_id}
-              >
-                {/* Yellow meeting pin goes here */}
-                {meetingPoint && (
-                  <AdvancedMarker
-                    title="Meeting Point"
-                    position={{ lat: meetingPoint.lat, lng: meetingPoint.lon }}
-                  >
-                    <Pin
-                      background="#facc15" // Yellow
-                      borderColor="#000"
-                      glyphColor="#000"
-                      scale={2}
-                    />
-                  </AdvancedMarker>
-                )}
-                {/* Existing loop for user building pins */}
-                {destinations &&
-                  destinations.map((item: SearchResult, index) => (                   
+  
+                {/* Map */}
+                <Map
+                  className="map-container"
+                  defaultCenter={{ lat: 41.871838324998784, lng: -87.65107916698115 }}
+                  defaultZoom={16}
+                  gestureHandling="greedy"
+                  disableDefaultUI
+                  mapId={map_id}
+                >
+                  {/* Meeting Point */}
+                  {meetingPoint && (
                     <AdvancedMarker
-                      onClick={() => {
-                        setSelectedPin(item.name);
-                      }}
+                      title="Meeting Point"
+                      position={{ lat: meetingPoint.lat, lng: meetingPoint.lon }}
+                    >
+                      <Pin background="#facc15" borderColor="#000" glyphColor="#000" scale={2} />
+                    </AdvancedMarker>
+                  )}
+  
+                  {/* Building Pins */}
+                  {destinations.map((item, index) => (
+                    <AdvancedMarker
                       key={index}
+                      onClick={() => setSelectedPin(item.name)}
                       title={item.name}
-                      position={{
-                        lat: Number(item.lat),
-                        lng: Number(item.lon),
-                      }}
+                      position={{ lat: item.lat, lng: item.lon }}
                     >
                       <Pin
-                        // Yellow (unselected): #FBBC04
-                        // Green (selected): #19dd51
-                        background={
-                          selectedPin == item.name ? "#19dd51" : "#FBBC04"
-                        }
-                        glyphColor={"#000"}
-                        borderColor={"#000"}
+                        background={selectedPin === item.name ? "#19dd51" : "#FBBC04"}
+                        borderColor="#000"
+                        glyphColor="#000"
                         scale={1.5}
                       />
                     </AdvancedMarker>
                   ))}
-              </Map>
+                </Map>
+  
+              </div>
             </APIProvider>
           )}
         </div>
       </header>
     </div>
   );
+  
 }
