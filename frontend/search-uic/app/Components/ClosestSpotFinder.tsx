@@ -18,6 +18,7 @@ interface ClosestSpotFinderProps {
   spots: SearchResult[];
   setSpots: React.Dispatch<React.SetStateAction<SearchResult[]>>;
   filters: string[];
+  filteredLocations: boolean[];
   setMeetingPoint: React.Dispatch<
     React.SetStateAction<{ lat: number; lon: number } | null>
   >;
@@ -27,6 +28,7 @@ export default function ClosestSpotFinder({
   spots,
   setSpots,
   filters,
+  filteredLocations
 }: ClosestSpotFinderProps) {
   const [locations, setLocations] = useState<SpotFinder[]>([]);
   const [from, setFrom] = useState("");
@@ -49,6 +51,14 @@ export default function ClosestSpotFinder({
     }
 
     const buildingNames = locations.map((loc) => loc.from.toLowerCase());
+    const selectedFilters = filteredLocations.length > 0 && filteredLocations.some(f => f)
+  ? filters.filter((_, idx) => filteredLocations[idx])
+  : [...filters]; // copy all filters if none selected
+    if (!selectedFilters || selectedFilters.length === 0) {
+      alert("No filters selected and fallback to all filters failed.");
+      setIsLoading(false);
+      return;
+    }
     setIsLoading(true); // START LOADING
 
     try {
@@ -57,11 +67,26 @@ export default function ClosestSpotFinder({
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ buildings: buildingNames, filters }),
+          body: JSON.stringify({ buildings: buildingNames, filters: selectedFilters }),
         }
       );
 
+      if (!res.ok) {
+        const errorData = await res.json();
+        alert(errorData.error || "Server Error");
+        setIsLoading(false);
+        return;
+      }
+      
       const data = await res.json();
+      
+      // Check if critical fields exist
+      if (!data.meeting_building || !data.fermat_point) {
+        alert("No valid meeting point could be found with the selected filters.");
+        setIsLoading(false);
+        return;
+      }      
+
       console.log("Backend response:", data); // NEW LOG
       if (res.ok) {
         console.log("Filtered Meeting Point:", data);

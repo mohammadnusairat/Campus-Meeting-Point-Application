@@ -111,6 +111,7 @@ export default function Home() {
                       spots={destinations}
                       setSpots={setDestinations}
                       filters={filters}
+                      filteredLocations={filteredLocations}
                       setMeetingPoint={setMeetingPoint}
                     />
                     <Filter
