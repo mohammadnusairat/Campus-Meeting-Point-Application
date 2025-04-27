@@ -239,7 +239,12 @@ export default function ClosestSpotFinder({
   
           {/* Loading Text */}
           {isLoading && (
-            <p style={{ color: "white", marginTop: "0.5rem", fontSize: "14px", textAlign: "center" }}>
+            <p style={{
+              color: "#7a0019",
+              marginTop: "0.5rem",
+              fontSize: "14px",
+              textAlign: "center"
+            }}>
               Calculating meeting point...
             </p>
           )}
@@ -247,7 +252,7 @@ export default function ClosestSpotFinder({
   
         {/* Available Buildings Section */}
         <div className="available-buildings-section">
-          <h3 style={{ marginTop: "1rem", color: "white" }}>Available Buildings</h3>
+          <h3 style={{ marginTop: "1rem", color: "#7a0019" }}>Available Buildings</h3>
           <div
             style={{
               maxHeight: "150px",
@@ -260,20 +265,12 @@ export default function ClosestSpotFinder({
           >
             {availableBuildings.length > 0 ? (
               availableBuildings.map((building, index) => (
-                <div
-                  key={index}
-                  style={{
-                    color: "#facc15",
-                    marginBottom: "0.5rem",
-                    padding: "4px 0",  // <-- add padding so each row has more vertical space
-                    fontSize: "14px",  // <-- consistent font size
-                  }}
-                >
+                <div key={index} className="available-building-item">
                   {building.name}
                 </div>
               ))
             ) : (
-              <p style={{ color: "gray" }}>No buildings match the selected filters.</p>
+              <p className="no-available-buildings">No buildings match the selected filters.</p>
             )}
           </div>
         </div>

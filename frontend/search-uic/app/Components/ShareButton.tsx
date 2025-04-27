@@ -28,7 +28,10 @@ export default function ShareButton({ selectedPin }: ShareButtonProps) {
       <div className="share-icon-placement">
         <Share2 />
       </div>
-      <button className="copy-pin-link" onClick={handleCopy}>
+      <button
+        className={`copy-pin-link ${copied ? "bounce" : ""}`}
+        onClick={handleCopy}
+      >
         {copied
           ? "Link Copied!"
           : `Copy ${!selectedPin ? "selected pin" : selectedPin} to clipboard`}

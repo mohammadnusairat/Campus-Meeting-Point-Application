@@ -1,8 +1,8 @@
 .closest-spot-finder {
   width: 320px;
   height: auto;
-  border-radius: 11px;
-  background: #c0c0c0;
+  border-radius: 16px; /* smoother corners */
+  background: #768884	;
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -10,43 +10,40 @@
   justify-content: flex-start;
   margin-top: 0;
   margin-left: 0;
-  position: relative; /* needed for positioning copy button */
+  position: relative;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* Style for the input form wrapper */
 .input-form {
-  width: 100%;
+  width: auto;
   display: flex;
   justify-content: center;
   margin-top: 10px;
 }
 
-/* Style for the input and button container */
 .input-wrapper {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
   width: 100%;
-  background: white;
   padding: 5px;
   border-radius: 4px;
-  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
+  box-shadow: none; /* remove any box shadow */
+  background: transparent; /* make background transparent */
 }
 
-/* Style for the input box */
 .styled-input {
   flex: 1;
-  border: 2px solid #7a0019; /* Burgundy border */
+  border: 2px solid #9a1734;
   padding: 10px;
   font-size: 16px;
-  border-radius: 4px 0 0 4px; /* Rounded corners on the left */
+  border-radius: 4px 0 0 4px;
   outline: none;
 }
 
-/* Style for the check button */
 .check-button {
-  background-color: #7a0019;
+  background-color: #9a1734;
   color: white;
   border: none;
   border-radius: 0 4px 4px 0;
@@ -59,16 +56,16 @@
 }
 
 .check-button:hover {
-  background-color: #5a0013;
+  background-color: #7a0019;
 }
 
-/* CENTERED MAP ICON */
+/* Recenter the Map Pin Icon */
 .map-pin-check-icon-placement {
   width: 40px;
   height: 40px;
   margin-top: 0;
   margin-bottom: 10px;
-  margin-left: 120px;
+  margin-left: 116px;
   border-radius: 4px;
   background: #7a0019;
   color: white;
@@ -76,16 +73,14 @@
   align-items: center;
   justify-content: center;
   font-size: 24px;
-  align-self: flex-start; /* NEW: forces it to stick to left side inside flex column */
 }
 
-/* Shared button styles */
 .button {
   padding: 0.5rem 1rem;
-  background-color: #7a0019;
+  background-color: #9a1734;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   font-size: 14px;
   font-weight: bold;
   cursor: pointer;
@@ -98,23 +93,22 @@
 }
 
 .button:hover {
-  background-color: #5a0013;
+  background-color: #7a0019;
 }
 
-/* Specific button styles */
 .plus-button {
   width: 60px;
   height: 60px;
   font-size: 32px;
   border: 2px solid white;
-  margin: 10px auto; /* center horizontally */
+  margin: 10px auto;
 }
 
 .filter-submit-button {
   width: 80%;
   font-size: 16px;
   margin: 10px auto;
-  display: block; /* center */
+  display: block;
 }
 
 .remove-button {
@@ -122,25 +116,23 @@
   font-size: 12px;
 }
 
-/* Style for the "No locations added yet" text */
 .no-locations-text {
-  color: #7a0019;
+  color: #9a1734;
   text-align: center;
   font-size: 16px;
   font-weight: bold;
   margin-top: 10px;
 }
 
-/* Style for each location item */
 .location-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
   background: #f5f5f5;
   padding: 10px;
-  border-radius: 4px;
+  border-radius: 6px;
   margin-bottom: 10px;
-  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .location-text {
@@ -155,4 +147,21 @@
   top: 10px;
   right: 10px;
   z-index: 1000;
+}
+
+/* Available Buildings Items */
+.available-building-item {
+  padding: 8px 0;
+  color: #facc15;
+  transition: background-color 0.2s ease;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.available-building-item:last-child {
+  border-bottom: none;
+}
+
+.available-building-item:hover {
+  background-color: rgba(250, 204, 21, 0.1);
+  border-radius: 6px;
 }

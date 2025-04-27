@@ -1,17 +1,19 @@
 .background-map {
   position: absolute;
+  z-index: -1;
   width: 100%;
   height: 100%;
   left: 0;
   top: 0;
-  z-index: 0;
 }
 
 .Home {
   width: 100%;
   height: 100vh;
-  position: relative; /* So children absolute position against this */
+  position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .title-search-location {
@@ -25,25 +27,22 @@
   justify-content: center;
   gap: 1.5rem;
   z-index: 999;
-  background: rgba(255, 255, 255, 0.8); /* Optional: light background behind title bar */
-  padding: 10px 20px;
-  border-radius: 8px;
-}
-
-.eta-filter {
-  margin-left: 30px;
-  margin-top: 150px;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 12px 24px;
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
 }
 
 .filters-box {
   position: absolute;
   top: 160px;
   right: 30px;
-  z-index: 9999; /* very high */
-  background: rgba(240, 208, 122, 0.95);
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  z-index: 9999;
+}
+
+.eta-filter {
+  margin-left: 30px;
+  margin-top: 140px;
 }
 
 .map-container {
