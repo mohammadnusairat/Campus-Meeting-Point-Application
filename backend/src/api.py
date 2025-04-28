@@ -315,7 +315,7 @@ def compute_meeting_by_buildings_with_filters():
     candidates = []
     for b in buildings:
         tags = [t.lower() for t in b.get("tags", [])]
-        if required_tags.intersection(tags):
+        if required_tags.issubset(tags):
             dist = geodesic((fermat_lat, fermat_lon), (b["lat"], b["lon"])).meters
             candidates.append((dist, b))
 
@@ -406,6 +406,30 @@ def buildings_by_filter():
 
     return jsonify(filtered)
 
+@app.route("/buildings_by_multiple_filters")
+def buildings_by_multiple_filters():
+    tags_query = request.args.get("tags", "").strip().lower()
+
+    if not tags_query:
+        # No tags provided; return all buildings
+        return jsonify(load_buildings())
+
+    requested_tags = set(tag.strip() for tag in tags_query.split(",") if tag.strip())
+    buildings = load_buildings()
+    filtered = []
+
+    for b in buildings:
+        building_tags = set(t.lower() for t in b.get("tags", []))
+        if requested_tags.issubset(building_tags):  # all selected tags must match
+            filtered.append({
+                "name": b["name"],
+                "lat": b["lat"],
+                "lon": b["lon"],
+                "aliases": b.get("aliases", []),
+                "tags": b.get("tags", [])
+            })
+
+    return jsonify(filtered)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

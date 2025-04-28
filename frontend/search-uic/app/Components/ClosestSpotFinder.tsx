@@ -48,15 +48,20 @@ export default function ClosestSpotFinder({
       const selectedFilters = filteredLocations.length > 0 && filteredLocations.some(f => f)
         ? filters.filter((_, idx) => filteredLocations[idx])
         : [];
-
-      const query = selectedFilters.length > 0 ? `type=${selectedFilters[0]}` : ""; // backend expects single type at a time
-      const res = await fetch(`http://localhost:5000/buildings_by_filter?${query}`);
+  
+      let queryString = "";
+      if (selectedFilters.length > 0) {
+        queryString = `?tags=${encodeURIComponent(selectedFilters.join(","))}`;
+      }
+  
+      const res = await fetch(`http://localhost:5000/buildings_by_multiple_filters${queryString}`);
       const data = await res.json();
+  
       setAvailableBuildings(data || []);
     } catch (err) {
       console.error("Error fetching available buildings:", err);
     }
-  };
+  };  
 
   const fetchMeetingPoint = async () => {
     if (locations.length < 2) {
@@ -255,7 +260,7 @@ export default function ClosestSpotFinder({
           <h3 style={{ marginTop: "1rem", color: "#7a0019" }}>Available Buildings</h3>
           <div
             style={{
-              maxHeight: "150px",
+              maxHeight: "80px",
               overflowY: "auto",
               marginTop: "0.5rem",
               backgroundColor: "#1f2937",
