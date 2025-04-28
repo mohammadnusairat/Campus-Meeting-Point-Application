@@ -2,12 +2,12 @@
   width: 320px;
   height: auto;
   border-radius: 16px; /* smoother corners */
-  background: #768884	;
+  background: #ec7e7e;
   padding: 20px;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
+  align-items: center;
+  justify-content: center;
   margin-top: 0;
   margin-left: 0;
   position: relative;
@@ -20,6 +20,13 @@
   justify-content: center;
   margin-top: 10px;
 }
+
+/* .locations-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+} */
 
 .input-wrapper {
   display: flex;
@@ -40,6 +47,7 @@
   font-size: 16px;
   border-radius: 4px 0 0 4px;
   outline: none;
+  margin: 5px;
 }
 
 .check-button {
@@ -61,18 +69,16 @@
 
 /* Recenter the Map Pin Icon */
 .map-pin-check-icon-placement {
-  width: 40px;
-  height: 40px;
-  margin-top: 0;
-  margin-bottom: 10px;
-  margin-left: 116px;
-  border-radius: 4px;
-  background: #7a0019;
-  color: white;
+  position: absolute;
+  top: 0;
+  right: -18px; /* Adjusted to fit with larger layout */
+  height: 50px; /* Increased size for the icon */
+  width: 50px; /* Increased size for the icon */
+  border-radius: 12px;
+  background: #ec7e7e;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
 }
 
 .button {
@@ -96,11 +102,19 @@
   background-color: #7a0019;
 }
 
+.locations-title {
+  color: #000000;
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
 .plus-button {
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
   font-size: 32px;
-  border: 2px solid white;
+  /* border: 2px solid white; */
   margin: 10px auto;
 }
 
@@ -152,7 +166,7 @@
 /* Available Buildings Items */
 .available-building-item {
   padding: 8px 0;
-  color: #facc15;
+  color: #9a1734;
   transition: background-color 0.2s ease;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }

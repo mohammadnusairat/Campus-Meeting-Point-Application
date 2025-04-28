@@ -1,5 +1,6 @@
 import "@/app/Styles/ClosestSpotFinder.css";
 import { Check, MapPinCheck, Plus } from "lucide-react";
+import { Black_And_White_Picture } from "next/font/google";
 import { JSX, useEffect, useState } from "react";
 
 interface SearchResult {
@@ -29,7 +30,7 @@ export default function ClosestSpotFinder({
   setSpots,
   filters,
   filteredLocations,
-  setMeetingPoint
+  setMeetingPoint,
 }: ClosestSpotFinderProps) {
   const [locations, setLocations] = useState<SpotFinder[]>([]);
   const [from, setFrom] = useState("");
@@ -37,7 +38,9 @@ export default function ClosestSpotFinder({
   const [isLoading, setIsLoading] = useState(false);
   const [googleMapsLink, setGoogleMapsLink] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
-  const [availableBuildings, setAvailableBuildings] = useState<SearchResult[]>([]);
+  const [availableBuildings, setAvailableBuildings] = useState<SearchResult[]>(
+    []
+  );
 
   useEffect(() => {
     fetchAvailableBuildings();
@@ -45,23 +48,29 @@ export default function ClosestSpotFinder({
 
   const fetchAvailableBuildings = async () => {
     try {
-      const selectedFilters = filteredLocations.length > 0 && filteredLocations.some(f => f)
-        ? filters.filter((_, idx) => filteredLocations[idx])
-        : [];
-  
+      const selectedFilters =
+        filteredLocations.length > 0 && filteredLocations.some((f) => f)
+          ? filters.filter((_, idx) => filteredLocations[idx])
+          : [];
+
       let queryString = "";
       if (selectedFilters.length > 0) {
         queryString = `?tags=${encodeURIComponent(selectedFilters.join(","))}`;
       }
-  
-      const res = await fetch(`http://localhost:5000/buildings_by_multiple_filters${queryString}`);
+
+      const res = await fetch(
+        `http://localhost:5000/buildings_by_multiple_filters${queryString}`
+      );
       const data = await res.json();
-  
+
       setAvailableBuildings(data || []);
+      if (data) {
+        setSpots(data || []);
+      }
     } catch (err) {
       console.error("Error fetching available buildings:", err);
     }
-  };  
+  };
 
   const fetchMeetingPoint = async () => {
     if (locations.length < 2) {
@@ -70,9 +79,10 @@ export default function ClosestSpotFinder({
     }
 
     const buildingNames = locations.map((loc) => loc.from.toLowerCase());
-    const selectedFilters = filteredLocations.length > 0 && filteredLocations.some(f => f)
-      ? filters.filter((_, idx) => filteredLocations[idx])
-      : [...filters]; // fallback to all filters
+    const selectedFilters =
+      filteredLocations.length > 0 && filteredLocations.some((f) => f)
+        ? filters.filter((_, idx) => filteredLocations[idx])
+        : [...filters]; // fallback to all filters
 
     if (!selectedFilters || selectedFilters.length === 0) {
       alert("No filters selected and fallback to all filters failed.");
@@ -88,7 +98,10 @@ export default function ClosestSpotFinder({
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ buildings: buildingNames, filters: selectedFilters }),
+          body: JSON.stringify({
+            buildings: buildingNames,
+            filters: selectedFilters,
+          }),
         }
       );
 
@@ -102,7 +115,9 @@ export default function ClosestSpotFinder({
       const data = await res.json();
 
       if (!data.meeting_building || !data.fermat_point) {
-        alert("No valid meeting point could be found with the selected filters.");
+        alert(
+          "No valid meeting point could be found with the selected filters."
+        );
         setIsLoading(false);
         return;
       }
@@ -173,21 +188,24 @@ export default function ClosestSpotFinder({
                 textDecoration: "none",
                 fontWeight: "bold",
                 border: "none",
-                cursor: "pointer"
+                cursor: "pointer",
               }}
             >
               {copied ? "Link Copied!" : "Copy Meeting Link"}
             </button>
           </div>
         )}
-  
+
         {/* Icon */}
         <div className="map-pin-check-icon-placement">
           <MapPinCheck />
         </div>
-  
+
         {/* Locations Section */}
         <div>
+          <p className="locations-title">
+            <strong>Closest Meeting Point</strong>
+          </p>
           <div>
             {locations.length > 0 ? (
               locations.map((loc: SpotFinder, index) => (
@@ -207,7 +225,7 @@ export default function ClosestSpotFinder({
               <p className="no-locations-text">No locations added yet.</p>
             )}
           </div>
-  
+
           {showLocationForm && (
             <form onSubmit={(e) => submitLocation(e)} className="input-form">
               <div className="input-wrapper">
@@ -224,7 +242,7 @@ export default function ClosestSpotFinder({
               </div>
             </form>
           )}
-  
+
           <div>
             <button
               className="button plus-button"
@@ -233,39 +251,48 @@ export default function ClosestSpotFinder({
               <Plus />
             </button>
           </div>
-  
+
           {/* Compute Button */}
-          <button
-            className="button filter-submit-button"
-            onClick={fetchMeetingPoint}
-          >
-            Compute Filtered Meeting Point
-          </button>
-  
+          {locations.length >= 2 ? (
+            <button
+              className="button filter-submit-button"
+              onClick={fetchMeetingPoint}
+            >
+              Get Closest Meeting Point
+            </button>
+          ) : (
+            <p className="no-locations-text">Add 2 or more locations.</p>
+          )}
+
           {/* Loading Text */}
           {isLoading && (
-            <p style={{
-              color: "#7a0019",
-              marginTop: "0.5rem",
-              fontSize: "14px",
-              textAlign: "center"
-            }}>
+            <p
+              style={{
+                color: "#7a0019",
+                marginTop: "0.5rem",
+                fontSize: "14px",
+                textAlign: "center",
+              }}
+            >
               Calculating meeting point...
             </p>
           )}
         </div>
-  
+
         {/* Available Buildings Section */}
         <div className="available-buildings-section">
-          <h3 style={{ marginTop: "1rem", color: "#7a0019" }}>Available Buildings</h3>
+          <h3 style={{ marginTop: "1rem", color: "#7a0019" }}>
+            Available Buildings
+          </h3>
           <div
             style={{
               maxHeight: "80px",
               overflowY: "auto",
               marginTop: "0.5rem",
-              backgroundColor: "#1f2937",
+              backgroundColor: "#ec7e7e",
               padding: "0.5rem",
               borderRadius: "8px",
+              border: "#000000",
             }}
           >
             {availableBuildings.length > 0 ? (
@@ -275,11 +302,13 @@ export default function ClosestSpotFinder({
                 </div>
               ))
             ) : (
-              <p className="no-available-buildings">No buildings match the selected filters.</p>
+              <p className="no-available-buildings">
+                No buildings match the selected filters.
+              </p>
             )}
           </div>
         </div>
       </div>
     </>
-  );  
+  );
 }

@@ -1,6 +1,7 @@
 .filter {
   width: 220px;
-  min-height: 200px;
+  /* min-height: 200px; */
+  height: 170px;
   border-radius: 11px;
   background: rgba(240, 208, 122, 0.95); /* Add slight opacity */
   position: relative;
@@ -8,20 +9,23 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  padding: 20px;
+  padding: 15px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* important for visibility */
-  overflow: hidden; /* important */
+  /* overflow: hidden; important */
 }
 
 .map-pinned-icon-placement {
-  width: 39px;
-  height: 39px;
+  left: -33px; /* Adjusted to fit with larger layout */
+  top: 0px;
+  height: 50px; /* Increased size for the icon */
+  width: 50px; /* Increased size for the icon */
   border-radius: 11px;
   background: rgba(240, 208, 122, 0.95);
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 10px; /* add gap under icon */
+  position: absolute;
 }
 
 fieldset {

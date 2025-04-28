@@ -31,20 +31,23 @@ interface SearchResult {
 export default function Home() {
   const [destinations, setDestinations] = useState<SearchResult[]>([]);
   const [selectedPin, setSelectedPin] = useState("");
-  const [meetingPoint, setMeetingPoint] = useState<{ lat: number; lon: number } | null>(null);
+  const [meetingPoint, setMeetingPoint] = useState<{
+    lat: number;
+    lon: number;
+  } | null>(null);
   useEffect(() => {
     if (!meetingPoint) return;
-  
+
     const match = destinations.find(
       (d) =>
         Math.abs(d.lat - meetingPoint.lat) < 0.0002 &&
         Math.abs(d.lon - meetingPoint.lon) < 0.0002
     );
-  
+
     if (match) {
       setSelectedPin(match.name);
     }
-  }, [meetingPoint, destinations]);  
+  }, [meetingPoint, destinations]);
   const [isClient, setIsClient] = useState(false);
 
   const [filteredLocations, setFilteredLocations] = useState([
@@ -90,7 +93,6 @@ export default function Home() {
           {isClient && (
             <APIProvider apiKey={maps_api_key}>
               <div className="Home">
-  
                 {/* Top Bar */}
                 <div className="title-search-location">
                   <Title />
@@ -105,7 +107,7 @@ export default function Home() {
                   />
                   <ShareButton selectedPin={selectedPin} />
                 </div>
-  
+
                 {/* Map Controls - ClosestSpotFinder (Left) + Filters (Right) */}
                 <MapControl position={ControlPosition.TOP_LEFT}>
                   <div className="eta-filter">
@@ -128,11 +130,14 @@ export default function Home() {
                     setDestinations={setDestinations}
                   />
                 </div>
-  
+
                 {/* Map */}
                 <Map
                   className="map-container"
-                  defaultCenter={{ lat: 41.871838324998784, lng: -87.65107916698115 }}
+                  defaultCenter={{
+                    lat: 41.871838324998784,
+                    lng: -87.65107916698115,
+                  }}
                   defaultZoom={16}
                   gestureHandling="greedy"
                   disableDefaultUI
@@ -142,12 +147,20 @@ export default function Home() {
                   {meetingPoint && (
                     <AdvancedMarker
                       title="Meeting Point"
-                      position={{ lat: meetingPoint.lat, lng: meetingPoint.lon }}
+                      position={{
+                        lat: meetingPoint.lat,
+                        lng: meetingPoint.lon,
+                      }}
                     >
-                      <Pin background="#facc15" borderColor="#000" glyphColor="#000" scale={2} />
+                      <Pin
+                        background="#facc15"
+                        borderColor="#000"
+                        glyphColor="#000"
+                        scale={2}
+                      />
                     </AdvancedMarker>
                   )}
-  
+
                   {/* Building Pins */}
                   {destinations.map((item, index) => (
                     <AdvancedMarker
@@ -157,7 +170,9 @@ export default function Home() {
                       position={{ lat: item.lat, lng: item.lon }}
                     >
                       <Pin
-                        background={selectedPin === item.name ? "#19dd51" : "#FBBC04"}
+                        background={
+                          selectedPin === item.name ? "#19dd51" : "#FBBC04"
+                        }
                         borderColor="#000"
                         glyphColor="#000"
                         scale={1.5}
@@ -165,7 +180,6 @@ export default function Home() {
                     </AdvancedMarker>
                   ))}
                 </Map>
-  
               </div>
             </APIProvider>
           )}
@@ -173,5 +187,4 @@ export default function Home() {
       </header>
     </div>
   );
-  
 }
