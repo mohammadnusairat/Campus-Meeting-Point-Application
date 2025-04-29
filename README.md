@@ -91,9 +91,9 @@ Flask was chosen over heavier frameworks like Django to maintain simplicity, lig
 > **Note:** Ensure that the Flask backend is running on port 5000 before starting the frontend, as it depends on backend API responses.
 
 ## How to Use the App
-1. On the landing page, enter and select the name of a building in the search bar. This will cause a map icon to appear at that building, along with an option to copy a google maps link to that building at the top-right. 
-2. After planning out your starting buildings, add multiple starting locations on the left-side.
-3. Optionally, apply filters such as "Quiet Spots", "Lecture Hall", or "Study Spots". This will filter the available buildings list at the bottom-left (as well as the main search bar).
+1. On the landing page, apply filters such as "Quiet Spots", "Lecture Hall", or "Study Spots". This will filter the available buildings list at the bottom-left, as well as the main search bar. 
+2. Enter and select the name of a building in the search bar. This will cause a map icon to appear at that building, along with an option to copy a google maps link to that building at the top-right.
+3. After planning out your filters and starting buildings, add multiple starting locations on the left-side.
 4. Click "Compute Filtered Meeting Point".
 5. View the optimized meeting location suggested on the interactive map.
 6. Copy the meeting link for easy sharing!

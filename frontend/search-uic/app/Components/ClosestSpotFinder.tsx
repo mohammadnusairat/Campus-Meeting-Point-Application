@@ -52,25 +52,27 @@ export default function ClosestSpotFinder({
         filteredLocations.length > 0 && filteredLocations.some((f) => f)
           ? filters.filter((_, idx) => filteredLocations[idx])
           : [];
-
-      let queryString = "";
-      if (selectedFilters.length > 0) {
-        queryString = `?tags=${encodeURIComponent(selectedFilters.join(","))}`;
+  
+      if (selectedFilters.length === 0) {
+        // No filters selected -> show no buildings
+        setAvailableBuildings([]);
+        setSpots([]); // Also clear the spots if needed
+        return;
       }
-
+  
+      const queryString = `?tags=${encodeURIComponent(selectedFilters.join(","))}`;
+  
       const res = await fetch(
         `http://localhost:5000/buildings_by_multiple_filters${queryString}`
       );
-      const data = await res.json();
-
+      const data: SearchResult[] = await res.json();
+  
       setAvailableBuildings(data || []);
-      if (data) {
-        setSpots(data || []);
-      }
+      setSpots(data || []);
     } catch (err) {
       console.error("Error fetching available buildings:", err);
     }
-  };
+  };  
 
   const fetchMeetingPoint = async () => {
     if (locations.length < 2) {
