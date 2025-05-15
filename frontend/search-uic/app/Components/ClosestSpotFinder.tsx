@@ -90,10 +90,12 @@ export default function ClosestSpotFinder({
     if (!selectedFilters || selectedFilters.length === 0) {
       alert("No filters selected and fallback to all filters failed.");
       setIsLoading(false);
+      setMeetingPoint(null); // clear previous pin
       return;
     }
 
     setIsLoading(true);
+    setMeetingPoint(null);
 
     try {
       const res = await fetch(
@@ -112,6 +114,7 @@ export default function ClosestSpotFinder({
         const errorData = await res.json();
         alert(errorData.error || "Server Error");
         setIsLoading(false);
+        setMeetingPoint(null); // clear previous pin
         return;
       }
 
@@ -152,6 +155,7 @@ export default function ClosestSpotFinder({
     } catch (err) {
       console.error("Error fetching meeting point:", err);
       alert("Server error.");
+      setMeetingPoint(null); // clear previous pin
     }
 
     setIsLoading(false);
