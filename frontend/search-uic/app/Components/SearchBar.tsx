@@ -74,7 +74,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
     }, 300);
 
     return () => clearTimeout(delay);
-  }, [query, filteredLocations]);
+  }, [query, filteredLocations, fetchInputQuery]);
 
   return (
     <div className="search">

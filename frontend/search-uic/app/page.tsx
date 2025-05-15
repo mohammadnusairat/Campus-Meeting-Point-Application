@@ -60,7 +60,7 @@ export default function Home() {
     false,
   ]);
 
-  const [filters, setFilters] = useState([
+  const [filters] = useState([
     "Bathroom",
     "Study Spots",
     "Lounges",

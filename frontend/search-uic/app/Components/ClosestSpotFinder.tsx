@@ -1,6 +1,6 @@
 import "@/app/Styles/ClosestSpotFinder.css";
 import { Check, MapPinCheck, Plus } from "lucide-react";
-import { Black_And_White_Picture } from "next/font/google";
+//import { Black_And_White_Picture } from "next/font/google";
 import { JSX, useEffect, useState } from "react";
 
 const API = process.env.NEXT_PUBLIC_API_URL;
@@ -28,11 +28,11 @@ interface ClosestSpotFinderProps {
 }
 
 export default function ClosestSpotFinder({
-  spots,
+  //spots,
   setSpots,
   filters,
   filteredLocations,
-  setMeetingPoint,
+  //setMeetingPoint,
 }: ClosestSpotFinderProps) {
   const [locations, setLocations] = useState<SpotFinder[]>([]);
   const [from, setFrom] = useState("");
