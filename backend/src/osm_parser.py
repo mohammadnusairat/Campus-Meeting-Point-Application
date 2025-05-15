@@ -4,8 +4,7 @@ import json
 def load_buildings(filename=None):
     import os
     if filename is None:
-        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        filename = os.path.join(base_dir, "data", "buildings.json")
+        filename = os.path.abspath("buildings.json")
     with open(filename, "r") as f:
         return json.load(f)
 

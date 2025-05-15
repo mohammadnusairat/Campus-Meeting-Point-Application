@@ -3,6 +3,7 @@ from dijkstra import dijkstra
 from fermat import geodesic_fermat_point
 from osm_parser import load_open_street_map, ReadMapNodes, ReadFootways
 from geopy.distance import geodesic
+import os
 
 def find_nearest_node(graph, lat, lon, nodes):
     """
@@ -64,7 +65,7 @@ def compute_meeting_point(graph, nodes, people_locations):
 def main():
     print("** Finding Best Meeting Location **")
 
-    filename = r"../data/uic-2024.osm"
+    filename = os.path.abspath("uic-2024.osm")
     xml_root = load_open_street_map(filename)
 
     if xml_root is None:
