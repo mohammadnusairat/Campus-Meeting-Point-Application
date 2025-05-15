@@ -11,6 +11,7 @@ import trie
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BUILDINGS_FILE = os.path.join(BASE_DIR, "data", "buildings.json")
+print("Looking for buildings file at:", BUILDINGS_FILE)
 
 app = Flask(__name__)
 CORS(app)
