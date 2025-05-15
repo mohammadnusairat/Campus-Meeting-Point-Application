@@ -3,6 +3,8 @@ import { Check, MapPinCheck, Plus } from "lucide-react";
 import { Black_And_White_Picture } from "next/font/google";
 import { JSX, useEffect, useState } from "react";
 
+const API = process.env.NEXT_PUBLIC_API_URL;
+
 interface SearchResult {
   name: string;
   tags: string[];
@@ -61,9 +63,8 @@ export default function ClosestSpotFinder({
       }
   
       const queryString = `?tags=${encodeURIComponent(selectedFilters.join(","))}`;
-  
       const res = await fetch(
-        `http://localhost:5000/buildings_by_multiple_filters${queryString}`
+        `${API}/buildings_by_multiple_filters${queryString}`
       );
       const data: SearchResult[] = await res.json();
   
@@ -96,7 +97,7 @@ export default function ClosestSpotFinder({
 
     try {
       const res = await fetch(
-        "http://localhost:5000/compute_meeting_by_buildings_with_filters",
+        `${API}/compute_meeting_by_buildings_with_filters`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

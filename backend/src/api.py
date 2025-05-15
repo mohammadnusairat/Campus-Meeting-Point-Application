@@ -10,13 +10,13 @@ from flask_cors import CORS
 import trie
 import os
 
-print("📂 Current working directory:", os.getcwd())
+# print("📂 Current working directory:", os.getcwd())
 
 BUILDINGS_FILE = os.path.abspath("buildings.json")
 OSM_FILE = os.path.abspath("uic-2024.osm")
 
-print("Looking for buildings file at:", BUILDINGS_FILE)
-print("Looking for OSM file at:", OSM_FILE)
+# print("Looking for buildings file at:", BUILDINGS_FILE)
+# print("Looking for OSM file at:", OSM_FILE)
 
 app = Flask(__name__)
 CORS(app)

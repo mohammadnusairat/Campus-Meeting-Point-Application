@@ -4,6 +4,8 @@ import { Search } from "lucide-react";
 import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
 import "@/app/Styles/SearchBar.css";
 
+const API = process.env.NEXT_PUBLIC_API_URL;
+
 interface SearchResult {
   name: string;
   tags: string[];
@@ -56,8 +58,9 @@ const SearchBar: React.FC<SearchBarProps> = ({
     try {
       // Getting
       const response = await fetch(
-        `http://127.0.0.1:5000/autocomplete?prefix=${searchTerm}&filters=${filtersParam}`
+        `${API}/autocomplete?prefix=${searchTerm}&filters=${filtersParam}`
       );
+
       const data: [] = await response.json();
       setQueryResults(data);
     } catch (error) {
