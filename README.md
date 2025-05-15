@@ -13,6 +13,7 @@
         <tr>
             <td><a href="#setup-instructions">Setup Instructions</a></td>
             <td><a href="#how-to-use-the-app">How to Use the App</a></td>
+            <td><a href="#deployment--production-notes">Deployment & Production Notes</a></td>
             <td><a href="#team-contributions">Team Contributions</a></td>
             <td><a href="#future-improvements">Future Improvements</a></td>
             <td><a href="#feedback">Feedback</a></td>
@@ -98,8 +99,22 @@ Flask was chosen over heavier frameworks like Django to maintain simplicity, lig
 5. View the optimized meeting location suggested on the interactive map.
 6. Copy the meeting link for easy sharing!
 
+## Deployment & Production Notes
+
+The application is now fully deployed and accessible live at:
+
+🔗 [**Live App**](https://campus-meeting-point-application.vercel.app)
+
+### Backend (Railway)
+- Deployed Flask backend with proper CORS configuration to accept requests from the Vercel frontend.
+- Data files such as `buildings.json` and `uic-2024.osm` are hosted with the backend and accessed via relative paths.
+
+### Frontend (Vercel)
+- Next.js frontend deployed to Vercel with environment variables to dynamically reference the backend API.
+- Ensures clean separation of concerns between frontend and backend services.
+
 ## Team Contributions
-- **Mohammad Nusairat**: Developed and implemented all backend functionality, including API endpoints, graph algorithms, shortest-path computation, and geodesic meeting point optimization (excluding the trie-based autocomplete).
+- **Mohammad Nusairat**: Developed and implemented all backend functionality; including API endpoints, graph algorithms, shortest-path computation, and geodesic meeting point optimization (excluding the trie-based autocomplete). Also finalized production of the app by deploying backend to Railway and frontend to Vercel.
 - **Adrian Quiroz**: Led the frontend development, implementing the search bar, location selection, filtering options, meeting point visualization, and map interactions using Next.js's React.js framework, and CSS.
 - **Ivan Torres**: Created the trie data structure supporting advanced autocomplete functionality in the backend, assisted with frontend components, and served as project manager by organizing weekly meetings and maintaining project documentation.
 
@@ -107,7 +122,6 @@ Flask was chosen over heavier frameworks like Django to maintain simplicity, lig
 - Integrate unused backend routes to enable dynamic filtering and backend-driven searches.
 - Use meeting point details like surface paths, distances, and summaries to enrich meeting point information.
 - Enhance error handling and UX by adding API error messages, better loading states, and empty-state feedback.
-- Harden CORS for production by restricting backend access to trusted frontend domains before deployment.
 - Integrate user login and session saving for shared meeting planning.
 - Extend map to cover off-campus buildings or nearby coffee shops.
 - Mobile-optimized UI for better accessibility on smartphones.
