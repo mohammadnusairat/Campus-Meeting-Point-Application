@@ -32,7 +32,7 @@ export default function ClosestSpotFinder({
   setSpots,
   filters,
   filteredLocations,
-  //setMeetingPoint,
+  setMeetingPoint,
 }: ClosestSpotFinderProps) {
   const [locations, setLocations] = useState<SpotFinder[]>([]);
   const [from, setFrom] = useState("");
@@ -145,6 +145,10 @@ export default function ClosestSpotFinder({
         aliases: [],
       };
       setSpots((prev: SearchResult[]) => [...prev, buildingToAdd]);
+      setMeetingPoint({
+        lat: data.fermat_point.lat,
+        lon: data.fermat_point.lon,
+      });
     } catch (err) {
       console.error("Error fetching meeting point:", err);
       alert("Server error.");
