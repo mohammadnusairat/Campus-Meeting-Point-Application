@@ -19,7 +19,7 @@ OSM_FILE = os.path.abspath("uic-2024.osm")
 # print("Looking for OSM file at:", OSM_FILE)
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "https://campus-meeting-point-application-production.up.railway.app/"}})
 
 # global trie for lookup
 autocomplete_trie = trie.build_trie_from_buildings(BUILDINGS_FILE)
