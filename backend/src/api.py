@@ -13,7 +13,10 @@ import os
 print("📂 Current working directory:", os.getcwd())
 
 BUILDINGS_FILE = os.path.abspath("buildings.json")
+OSM_FILE = os.path.abspath("uic-2024.osm")
+
 print("Looking for buildings file at:", BUILDINGS_FILE)
+print("Looking for OSM file at:", OSM_FILE)
 
 app = Flask(__name__)
 CORS(app)
@@ -30,7 +33,7 @@ def initialize_data():
     global Nodes, G, node_components
     print("Loading OpenStreetMap data...")
 
-    filename = os.path.join(BASE_DIR, "data", "uic-2024.osm")
+    filename = OSM_FILE
     xml_root = load_open_street_map(filename)
 
     if xml_root is None:
